@@ -1,0 +1,369 @@
+# -*- coding: utf-8 -*-
+
+#######################
+# How to solve Problems?
+#######################
+
+Example problem:
+	daysBetweenDates
+	=> Given your birthday and the current date, calculate your age in days.
+
+
+What is the first things we should do to solve a problem?
+=> Make sure we *understand the problem
+
+
+Understanding a Computational problem:
+
+a.Possible input (set)
+b.desired output
+c.relationship between input to output
+
+Solution:   input -> procedure -> output
+
+
+===============================================
+*******************
+*******************
+*******************
+The All problems solving Rules in the Galaxy:
+
+    ##############
+    # section A: understand the problem
+    ###############
+    0. Don't Panic! :)
+    1. What are the inputs?
+    	step a.假設？
+    	step b.哪些是合法的inputs set?
+    	step c.How are inputs represented?
+
+    2. What are the outputs? return type?
+
+    ##############
+    # section B: Solve the problem
+    ###############
+    3. Work Through some examples by hand
+        	step a.work our some example 讓我更了解關係和一些corner case = Understand the Relationship between input and output
+        	step b.Consider SYSTEMATICALLY how a human solves the problem, 先系統化的考慮一下, 人會怎麼解
+
+    4. Simple mechanical solution.
+            => key 越simple越機械化越好
+            => Don't optimize prematurely! 不用過早想要優化
+            => Simple and Correct.
+
+    5. Develop incrementally and Test as we go.
+        一小步一小步的增加, 且一邊測試用 assert 寫些測試代碼
+
+
+
+*******************
+*******************
+*******************
+===============================================
+
+1. What are the inputs?
+	two dates
+	step a.假設,沒有時空旅行
+	step b.合法的input set
+		b1.第二天的日期, 絕不會在比第一天早 (Defensive Programming, 防呆,checking on our code!)
+		b2.Gregorian calendar (起始從 15 Oct 1582)
+
+	step c. Def daysBetweenDates(year1,month1,day1,year2,month2,day2)
+
+===========
+2.What are the outputs?
+
+	Calculate your age in days, return a number in days
+
+
+=============
+3.Solve the problem (map input to output)
+    step a.work our some example = Understand the Relationship between input and output
+
+        daysBetweenDates(2012,12,7,2012,12,7) -> 0 day
+        daysBetweenDates(2012,12,7,2012,12,8) -> 1 day
+        daysBetweenDates(2012,12,8,2012,12,7) -> 因爲題目假設後面一天一定比前一天數字大, 因此 undefined
+        daysBetweenDates(2012,6,29,2013,6,29) -> 365 day
+        daysBetweenDates(2012,6,29,2013,6,31) -> 因為六月沒有31號, undefined
+
+    step b.Consider SYSTEMATICALLY how a human solves the problem, 先系統化的考慮一下, 人會怎麼解
+
+        假設我想舉個例子, 先考慮人怎麼做
+            daysBetweenDates(2013,1,24,2013,06,29)
+
+            於是人可能會去查月曆, 先用手算
+                0124~0131 = 7 天
+                Feb       = 28
+                March     = 31
+                April     = 30
+                May       = 31
+             +  June 到 29 = 29
+            --------------------
+                 156 天
+
+            這個時候, 有一個較 systematically 系統化的解法,
+                1.頭尾小心個別算, 2.中間整個月份的直接加上去
+            但是如果題目變成 2013,01,24 => 20"24",06,29 的話, 就更難了因為不同的年不一定是 356天
+
+
+
+        先照剛才的想法寫下人的系統化做法 algorithm Pseudocode
+        def approach1:#用人的想法來做
+            month1 = 開始的那個月份
+            month2 = 結束的那個月份
+
+            days = 開始的那個月份所佔的天數
+            month1+=1
+            while month1< month2:
+                days += month1所擁有的全部天數
+                month1+=1, month1 往前推進
+            day2 = 結束那個月份所要算的天數
+
+            days +=day2
+
+            #假設要算得還不在同一年份, 那還要算上年
+            year1 當前這年
+            year2 目標這年
+
+            while year1 < year2:
+                days +=days in year1, 把year1全部的天數加上去
+
+
+        => 以上的做法太多地方沒有handle到, 光寫完這個 pseudocode 就覺得要加很多
+            special case 才能handle corner case
+
+            Doesn't handle:
+                1. 輸入了同一天
+                2. month2 < month1, year2 > year1
+                    ex: 2013,5,1 -> 2014,1,2
+                    這時候在跑第一個while 時, month1 = 5, month2=1, 所以while根本不會跑
+                3. 再算years 時, 要去注意二月28 or 29 天 需要寫case 進去
+
+
+        =>綜合考量之後, 我們發現這個需要插入太多 case, 弄得太複雜了
+        => We should try to find a simpler way
+        => 電腦需要做一個簡單的機械化動作, 人往往想要求快,有很多
+        => computer need some Simple mechanical algorithm
+
+
+========================================
+3. Simple mechanical solution.
+
+        def approach2:#單純一天一天跟著日曆加到答案那天
+            days = 0
+            while date1 before date2:
+                date1 update to the next date #date1 一直往前移
+                days +=1
+            return days
+
+        => 粗略估算一下, 如果要求 12Dec1912 -> 12Dec2012, 100年的話, 要花多久時間呢？
+        100年 x 365天 ~約 36500天
+        CPU 一秒約處例 1billion = 100000000 = 10^9 指令 , 1 ns/instruction
+        假設一個while lopp 需要 1000個指令(多算的 猜的)
+        因此總共以 36500x1000個指令  = 36,500,000 = 36.5M,  一個 instruction  10-9 秒
+        因此總共 0.036 sec, 雖然這不算快的, 但是保持了簡單和至少可以達成的時間, 我們在
+        早期的時候, 不急著優化
+
+
+        ---------------------------------------
+        OK, 既要要往上面approach2 做了, 那個function 要先做呢？ 把整個問題拆開是基本
+
+         nextDay(year,month,day) : to get the next day for simple case
+         isLeapYear(year): to determine if years is leap year
+
+        nextDay() 先做, 因為他是整個approach 的核心, 如果他ok了, 基本上靠近解答一大步
+        isLeapYear 當然也需要, 但核心nextDay還是先處理
+
+
+        為了方便一開始先假設 所有 month have 30days
+
+        input -> nextDay(year, month, day) -> return year, month, day
+
+        def nextDay(year, month, day):
+            #keep simple and mechanical
+            if day < 30:
+                return year,month,day + 1
+            else:
+                if month < 12:
+                    return year, month+1,1
+                else:
+                    return year+1, 1,1
+
+
+        => write small bits of code "test" them to know what they do
+
+        ---------------------------------------
+        看起來這個function 工作正常 (但是我們仍然假設一個月30天的情況下)
+        所以接下來你會想要做哪件事情呢？
+
+            1.refine 這個 nextDay function 讓他去應付真正月份對應的days, 針對真實的month
+            2.就拿他了跑daysBetweenDate 這個solution, 雖然現在只能給出大致的days, 但
+                可以更快瞭解, 整條路是否有其他問題, 因為你知道 1 其實不太有風險
+
+            => **所以繼續做2, 反而先不看1了
+
+
+        ---------------------------------------
+        OK, 換來設計一個 Pseudocode 能讓 daysBetweenDates 給出大致的答案, 利用剛才nextDay()
+
+        HINT: Start by defining a HELPER procedure
+
+
+        The solution to this problem is broken down into three parts:
+
+        1) Step One: Pseudocode
+
+        2) Step Two: Helper Function
+
+        3) Step Three: daysBetweenDates
+
+
+1) Step One: Pseudocode 剛才已經定義過
+
+        def approach2:#單純一天一天跟著日曆加到答案那天
+            days = 0
+            while date1 before date2: ->現在要做 dateIsBefore(year1,month1,day1,year2,month2,day2)
+                date1 update to the next date #nextDay() ->已經有了
+                days +=1
+            return days
+2) Step Two: Helper Function
+        做一個helper function: dateIsBefore(year1,month1,day1,year2,month2,day2)
+
+        #combine
+        def dateIsBefore(year1,month1,day1,year2,month2,day2):
+            if year2>year1:
+                return True
+            if year2 == year1:
+                if month2 > month1:
+                    return True
+                if month2== month1:
+                    return day2>day1
+            return False
+
+
+        def nextDay(year, month, day):
+            """Simple version: assume every month has 30 days"""
+            if day < 30:
+                return year, month, day + 1
+            else:
+                if month == 12:
+                    return year + 1, 1, 1
+                else:
+                    return year, month + 1, 1
+
+        def daysBetweenDates(year1, month1, day1, year2, month2, day2):
+            """Returns the number of days between year1/month1/day1
+               and year2/month2/day2. Assumes inputs are valid dates
+               in Gregorian calendar, and the first date is not after
+               the second."""
+
+            days_count = 0
+
+            while dateIsBefore(year1,month1,day1,year2,month2,day2):
+                year1, month1, day1 = nextDay(year1, month1, day1)
+                days_count +=1
+
+            return days_count
+
+
+
+        => 加入 asserct() 去防止 year2 比 year1 早, 但因為有個比較古怪的case
+            就是我們希望 兩天如果是同一天的話, 還是要能算, 得到day = 0
+            不要被assert 掉
+
+            因此在while之前寫成反向的
+
+            assert not dateIsBefore(year2,month2,day2,year1,month1,day1)
+
+
+============================================
+Real world Problem: 架構都有了, 來面對真正一個月到底有幾天的問題
+
+
+            **
+                放在心上:
+                        把功能寫成小模組, 能單模組測試, 最終大模組自然順
+                        (比起你全部寫一堆, 一次測, debug 起來更麻煩)
+
+
+            我們需要知道
+            A:daysinMonth()#專門回傳一個月多少天
+                a.可以先寫一個假function 來取代hardcode 的流程
+                b.再把內容改對,真的二月份和其他月份回傳該有的日子
+                    check wikipedia:https://en.wikipedia.org/wiki/Mont
+
+            B:isLeapYears()#閏年
+
+
+A.a:
+        def daysinMonth(year,month):
+            return 30
+
+
+        def nextDay(year, month, day):
+            """Simple version: assume every month has 30 days"""
+            if day < daysinMonth(year,month):
+                return year, month, day + 1
+            else:
+                if month == 12:
+                    return year + 1, 1, 1
+                else:
+                    return year, month + 1, 1
+
+        ==>寫上assert 來確認這個改動沒有造成錯誤, 理論上不會, 因為只是換成call function
+
+A.b:改成對的days
+
+
+                    Chronology	Alphabetic	Days
+                    1	January	31 days
+                    2	February	28 days, 29 in leap years
+                    3	March	31 days
+                    4	April	30 days
+                    5	May	31 days
+                    6	June	30 days
+                    7	July	31 days
+                    8	August	31 days
+                    9	September	30 days
+                    10	October	31 days
+                    11	November	30 days
+                    12	December	31 days
+
+
+
+        def daysinMonth(year,month):
+            if month ==1 or month ==3 or month == 7 or month ==10 or month ==12:
+                return 31
+            else:
+                if month ==2:
+                    return 28#我們處理leap year later
+                else:
+                    return 30
+
+
+B:
+Leap year: https://en.wikipedia.org/wiki/Leap_year
+
+    pseudocode:
+        if (year is not divisible by 4)
+            then (it is a common year)
+        else if (year is not divisible by 100)
+            then (it is a leap year)
+        else if (year is not divisible by 400)
+            then (it is a common year)
+        else (it is a leap year)
+
+
+        def isLeapYear(year):
+            if year % 4 !=0:
+                return False #common year
+            elif year % 100 !=0:
+                return True
+            elif year % 400 !=0:
+                return False #common year
+            else:
+                return True
+
+
+
+.
