@@ -1,0 +1,98 @@
+
+##################
+# Time complexity
+#################
+    Ex:
+    一個解碼的code
+
+    input : [X,w,Y]  -> 通過chiper 密碼本, 一一對應, 可以翻譯成其他 -> ouput : [A,v,B]
+
+    function decode(input):
+        create output string
+        for each letter in input: -> 每個字, run下面兩行, n個字 2n 行
+            get new_letter from letter's location in cipher => 如果這邊比較的時候, 是一個字母一個字母去比較 那其實多做26次運算
+            add new_letter to output
+        return output
+
+    再加上頭尾兩行code, 2n+2
+
+    Big O 原本拿來算 行數的
+    係數那些固定行數因為一樣, 不影響效能, 所以最後只看 input n
+    O(2n + 2) -> O(n)
+
+
+    上面代碼
+            get new_letter from letter's location in cipher => 如果這邊比較的時候, 是一個字母一個字母去比較 那其實多做26次運算
+    O( (2+26)n + 2) = O(29n + 2), 雖然同量級, 還是有影響
+    可見得 比較的時候, data structure 選擇很重要
+
+
+
+    ***也不是所有 O(n) 都跟input n 有關, 要看代碼, 沒關的就是O(1) 而已
+
+    ================
+    Worst Case and Approximation
+
+    所以剛才的 worst case : input 都是 Z, 比較要從A~Z 比較26 次
+                        O((3+26)n + 2)
+            Avg case : 就是比到 26個字母中間
+                     O( (3+13)n +2
+
+
+    O((3+26)n + 2) or O( (3+13)n +2 => 都算 O(n)
+
+
+
+
+
+##################
+# Space complexity
+#################
+
+For example, in C/C++, an integer type takes up 4 bytes of memory to store the value,
+but in Python 3 an integer takes 14 bytes of space.
+Again, this extra space is used for housekeeping functions in the Python language
+
+For the examples of this lesson we will avoid this complexity and assume the following sizes:
+
+Type	Storage size
+char	1 byte
+bool	1 byte
+int	    4 bytes
+float	4 bytes
+double	4 bytes
+
+只考慮data 用到的, 不管環境和指令所佔用的
+
+EX1:
+def our_constant_function():
+
+    x = 3 # Type int
+    y = 345 # Type int
+    z = 11 # Type int
+
+    answer = x+y+z
+
+    return answer
+=> x,y,z,answer 都是 int, 所以 4bytes x 4 = 16 bytes
+且這個size 沒有input 會改變它, space O(1)
+
+
+EX2:
+def our_linear_function(n):
+
+    n = n # Type int
+    counter = 0 # Type int
+    list_ = [] # Assume that the list is empty
+                #(i.e., ignore the fact that there is actually meta data stored with Python lists)
+
+    while counter < n:
+        list_[counter] = counter
+        counter = counter + 1
+
+    return list_
+
+=> list 會裝入 n 個 counter  + counter 自己int, 所以 4bytes*n + 4bytes 
+
+
+.
