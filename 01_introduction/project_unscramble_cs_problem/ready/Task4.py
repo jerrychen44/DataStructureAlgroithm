@@ -38,7 +38,6 @@ outgoingtextset = set([record[0] for record in texts])
 receivingtextset = set([record[1] for record in texts])
 
 outgoincalllist = list (outgoingcallset)
-#print(outgoincalllist)
 ################
 # checking the ruls
 # make outgoing calls
@@ -52,7 +51,7 @@ for num in outgoincalllist:
     if num not in outgoingtextset and num not in receivingtextset and num not in receivingcallset:
         ans.append(num)
 
-#print(ans)
+
 #in lexicographic order
 ans = sorted(ans)
 

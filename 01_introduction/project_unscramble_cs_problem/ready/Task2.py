@@ -43,7 +43,6 @@ def updatehashmapMax(hashmap,num,duraing):
 ###############
 hashmap = {}
 totalcallrecords = len(calls)
-#print(totalcallrecords)
 maxduraing = -1
 maxnumb = ''
 
@@ -56,10 +55,4 @@ for idx in range(totalcallrecords):
     updatehashmapMax(hashmap,answering,duraing)
 
 
-
-#print((hashmap))
-#print(len(hashmap))
-
-#print(max(hashmap.items(), key=operator.itemgetter(1))[0])
-#print(maxnumb,maxduraing)
 print("%s spent the longest time, %d seconds, on the phone during September 2016."%(maxnumb,maxduraing))

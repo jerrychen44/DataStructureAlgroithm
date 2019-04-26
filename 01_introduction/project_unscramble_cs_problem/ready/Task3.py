@@ -40,7 +40,6 @@ The list of codes should be print out one per line in lexicographic order with n
 # handle call only
 #################
 ans = []
-#hasmap={}
 incomAns080 = 0
 incom080 = 0
 totalcallrecords = len(calls)
@@ -73,9 +72,7 @@ for idx in range(totalcallrecords):
             if newitem != -1 and newitem not in ans:
                 ans.append(newitem)
 
-#print(ans)
 ans = sorted(ans)#in lexicographic order
-#print(ans)
 
 print("The numbers called by people in Bangalore have codes:")
 for item in range(len(ans)):
@@ -96,4 +93,4 @@ The percentage should have 2 decimal digits
 
 
 print("%.2f percent of calls from fixed lines in \
-Bangalore are calls to other fixed lines in Bangalore."%(incomAns080 /incom080))
+Bangalore are calls to other fixed lines in Bangalore."%((incomAns080 /incom080)*100))

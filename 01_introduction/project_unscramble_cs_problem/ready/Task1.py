@@ -59,14 +59,11 @@ for idx in range(totaltextsrecords):
     updatehashmap(hashmap,incoming)
     updatehashmap(hashmap,answering)
 
-#print((hashmap))
-#print(len(hashmap))
 
 ################################
 # handle call csv
 ################################
 totalcallrecords = len(calls)
-#print(totalcallrecords)
 
 #time O(M)
 for idx in range(totalcallrecords):
@@ -77,8 +74,6 @@ for idx in range(totalcallrecords):
     updatehashmap(hashmap,answering)
 
 
-#print((hashmap))
-#print(len(hashmap))
 
 #Time O(N+M), N = texts records, M = call records
 #Space O(N+M) for hashmap in worst case
