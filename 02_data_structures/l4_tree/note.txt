@@ -1,0 +1,95 @@
+#####################
+# Traversal
+# Depth first, Breadth first
+#####################
+
+               D
+            /     \
+           B        E
+          /  \        \
+        A     C         F
+
+BFS = level order traversal
+    D,B,E,A,C,F
+
+DFS:
+    pre-order
+        查看這個 node 內容, 再你 traversal 之 "前"
+        D,B,A,C,E,F
+
+
+    In-order: 大方向看這個tree, node 是從左讀到右的, 不管上上下下的話
+        直到我們碰到第一個left left, 才查看這個 node
+
+        A,B,C,D,E,F
+
+    post-order
+
+        traversal 之 "後" 才 check node
+        A,C,B,F,E,D,
+
+
+
+##############
+# Binary Tree (BT)
+##############
+Binary Tree with n nodes
+Rule: 一個parent 有一個或兩個 child,
+
+    Search O(n), 需要搜尋完所有的node
+        可以找任一個traversal 去做search
+    Delete O(n), 需要搜尋完所有的node
+        被delete 的那個人, 可以從最下面leaf 找一個上來補
+    Insert(height of tree) = O(logn)
+        找到leaf 就可以插進去
+
+        if a Binary Complete Tree with total n nodes.
+            n = 1 + 2 + 4 + ... + 2^(h-1) + 2^h = 2^(h+1) - 1
+            n = 2^(h+1) -1
+            h = ?,    logn = (h+1)log2 -1 => h = logn
+
+
+
+
+#########################
+# Binary Search Tree (BST)
+# *** Insert, Search , Delete 平均case 都是 O(logn)
+#########################
+Rule: Sorted binary tree, 左邊小於parent, 右邊大於parent
+
+
+               5
+            /     \
+           3        7
+          /  \     /  \
+        1     4    6     9
+
+# avg case : complete binary tree
+
+            5
+             \
+              10
+                \
+                 15
+                  \
+                   25
+
+# worst case: unbalanced or skew binary tree
+
+
+
+    Search, avg case O(logn), worst case O(n)
+        由於tree 已經 sorted 過, 跟著往左往右search 下去, 只需要 height of tree, O(logn)
+    Insert, avg case O(logn), worst case O(n)
+        理由同上
+    Delete 也是比較麻煩,
+
+
+
+
+
+
+
+
+
+.
