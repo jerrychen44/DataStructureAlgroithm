@@ -84,9 +84,125 @@ Rule: Sorted binary tree, 左邊小於parent, 右邊大於parent
         理由同上
     Delete 也是比較麻煩,
 
+#########################
+# BST Insert(new_value):
+#########################
+    //while version
+    **idea:
+        1.如果沒有root, Node(new_value) 設定成root, return
+        while True:
+            2.有 curnode = root, 就一直compare node.value,
+                case1: 值相等
+                    a.直接overwrite 原來node
+                    b.或用counter ++ 來紀錄
+                    c.或用list 來append, 因為這個value 可能只是key
+                    BREAK
+                case2: insert 值 小於 current node, 因此
+                    a. 如果 current node 有左child, curnode = curnode.left, 繼續往左
+                    b. 如果 沒有左child 了, 那就是代表要insert here. curnode.left = newnode, BREAK
+                case3: 同 case2, 只是大於往右
+
+    code:
+        def insert_with_loop(self,new_value):
+
+            if self.root == None:
+                self.set_root(new_value)
+                return
+
+            node = self.root
+            new_node = Node(new_value)
+
+            while (True):
+                comparison = self.compare(node, new_node)
+                if comparison == 0:
+                    # override with new node's value
+                    node.set_value(new_node.get_value())
+                    break # override node, and stop looping
+                elif comparison == -1:
+                    # go left
+                    if node.has_left_child():
+                        node = node.get_left_child()
+                    else:
+                        node.set_left_child(new_node)
+                        break #inserted node, so stop looping
+                else: #comparison == 1
+                    # go right
+                    if node.has_right_child():
+                        node = node.get_right_child()
+                    else:
+                        node.set_right_child(new_node)
+                        break # inserted node, so stop looping
+
+    //recursive ver, 基本上概念一樣, 就是多一個helper fun 往下call, 沒child 就直接assign and break
+    code:
+        def insert_with_recursion(self,value):
+            if self.get_root() == None:
+                self.set_root(value)
+                return
+            #otherwise, use recursion to insert the node
+            self.insert_recursively(self.get_root(), Node(value))
+
+        def insert_recursively(self,node, new_node):
+            #概念跟 iteration 差不多
+            comparison = self.compare(node,new_node)
+            if comparison == 0:
+                # equal, 就直接assign new_node as root
+                node.set_value(new_node.get_value())
+            elif comparison == -1:
+                # traverse left
+                # 如果有 left child, 那再繼續往下call
+                if node.has_left_child():
+                    self.insert_recursively(node.get_left_child(),new_node)
+                else:#如果已經是盡頭了, 那就是set new_node 到 node left
+                    node.set_left_child(new_node)
+            else: #comparison == 1
+                # traverse right
+                if node.has_right_child():
+                    self.insert_recursively(node.get_right_child(), new_node)
+                else:
+                    node.set_right_child(new_node)
+
+
+#########################
+# BST Search(new_value):
+#########################
+Idea: 同 insert, 差在, insert 是最後沒child 時, 插入new node, 而 search 是return False
+
+        def search(self,value):
+            #基本上就跟insert 一樣, compare 相同時
+            #return true, 然後, 走到null 時, 不必assign new_node,
+            #而是return False
+
+            node = self.get_root()
+            s_node = Node(value)
+
+            while (True):
+                comparison = self.compare(node, s_node)
+                if comparison == 0:
+                    return True
+                elif comparison == -1:#go left
+                    if node.has_left_child():
+                        node = node.get_left_child()
+                    else:
+                        return False
+                else: #== 1#go right
+                    if node.has_right_child():
+                        node = node.get_right_child()
+                    else:
+                        return False
 
 
 
+
+
+
+#########################
+# BST Delete(new_value):
+#########################
+Delete the node which has...
+case1: leaf node
+case2: node has 1 child node
+case3: node has 2 child nodes
 
 
 
