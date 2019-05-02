@@ -1,0 +1,512 @@
+
+======
+hash:
+======
+
+    主要是O(1) 查詢, 加快很多
+        => 以前的data structure 要search 不論是 array, set, list, linklist, binary tree = O(n), binary search tree O(height) 都多多少少與 n 相關,
+            也就是 linear time
+        => stack, queue 讓你找到最新或是最舊的data O(1), priority queue 讓你找到最想要的O(1), 但除了這些值, 你要search 其他item , 也是要 linear time.
+
+        ******************************************
+            只有hash map search 是 constant time.
+        *****************************************
+
+
+    面試時, 因為這個沒有完美的編碼, 可以好好和面試官討論優缺點
+
+ex:
+        hash function
+value  ----------------> hash value
+
+
+
+
+==================
+遇到Collisions:
+==================
+兩種方法:
+
+1. 增大 hash function 編碼寬度
+
+    假設用  x % num 當作 hash function, 如果 num = 100000  來當hash function 的話, 雖然
+        a.用很大的 100000 這樣會減少 collisions, 但是會需要太多空間去存編碼後的值
+            O(1)
+        b.當你用這麼大的空間去存, 如果下次遇到collision 後, 又要換 num, 你要把大量原本的
+            hash value , 改成新的, 這相當增加複雜度
+
+2. bucket system,
+    同樣 hash value 的, 通通裝起來 (如果你知道只有少量data 會碰撞在某幾個特定的 hash value, 如果幾乎每個人都一堆碰撞, 那不如去方法一, 稍微增大hash 編碼寬度)
+        譬如 a,b,c,d,e 邊碼後都是 6, 那 6 就有一個list =[a,b,c,d,e], 之後再去這個list 裡面找有沒有你要的
+        O(m) => m = 5 (a,b,c,d,e)
+    或是在 bucket 中, 在做第二層 hash function
+
+            hash function1
+    value  ----------------> hash value with bucket system
+                            --------------------------------    hash function 2
+                        6   |   a  |  b |  c  |  d  |   e  |  -------------------->  hash value2
+                            --------------------------------
+
+
+
+
+=============
+hash map : <key, value>
+=============
+上面講的是 hash 一個 value 成 hash value
+                                          hash function O(1)
+也就是運用在這裡的 key,   一個使用者輸入的 key ---------------> hash value key, 再存上對應的 value
+
+**
+    弄清楚 hashing, hashing table, hashing map
+
+ps. 要讓algo 變快, 第一個先想有沒有比較快的data structure
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ 實作 Summary:
+    step1. hash 編碼
+    step2. 將編碼壓縮
+    step3. collision 處理
+
+
+
+##################
+step1. hash 編碼 ->先確定能有好的分佈(可能range 很大很稀疏)
+##################
+
+hash function 對於 string 和 整數有不同的手法
+
+key is string:
+假設我們只把 string 轉 ascii code, 這用會有很多相同的 (abcd, bcda) 會一樣
+
+
+        def hash_function(string):
+            hash_code = 0
+            for character in string:
+                hash_code += ord(character)
+            return hash_code
+
+        hash_code_1 = hash_function("abcd")
+        print(hash_code_1)
+        hash_code_2 = hash_function("bcda")
+        print(hash_code_2)
+
+        394
+        394
+
+###################
+# key is string => 用 質數 p 當 編碼base, (p通常用 31 or 37)
+# ex: "abcde"  ----> a*p^4 +  b*p^3 + c*p^2 +d*p^1 +e*p^0
+###################
+因此, 對於 string 的 key, 有特定的用法
+    => 用一個質數 p 當作num的 base, p 常用 31 or 37 , 會得到較好的分佈
+
+code:
+    class HashMap:
+
+        def __init__(self, initial_size=10):
+            self.bucket_array = [None for _ in range(initial_size)]
+            self.p = 37
+            self.num_entries = 0
+
+        def put(self, key, value):
+            pass
+
+        def get(self, key):
+            pass
+
+        def get_bucket_index(self, key):
+            return self.get_hash_code(key)
+
+        #單純先能編碼
+        def get_hash_code(self, key):
+            key = str(key)
+            current_coefficient = 1#p 的次方, p^0 =1
+            hash_code = 0
+            for character in key:
+                hash_code += ord(character) * current_coefficient
+                current_coefficient *= self.p
+
+            return hash_code
+
+
+
+hash_map = HashMap()
+
+bucket_index = hash_map.get_bucket_index("abcd")
+print(bucket_index)
+-> 5204554
+
+hash_map = HashMap()
+
+bucket_index = hash_map.get_bucket_index("bcda")
+print(bucket_index)
+-> 5054002
+
+=>這時候你發現, 編碼真的可以是unique 了, 可是這麼大
+不可能拿這麼大的space 來存, 因此接下來是壓縮, 把
+5204554 壓縮到合理的空間範圍去存, 於是collision 機率開始增大
+
+
+
+
+
+##################
+step2. compression  --> 引入 collision
+##################
+在原本的code 加上 compression, 我們自己設定 bucket_array = 10 個
+也就是說 hash value 只能 0~9, 因為到時候 hashcode % 10
+
+
+ps. 這裡有點疑問是, 為什麼 current_coefficient and hash code 需要再loop裡面compression ?
+應該最後return 再 compression 就好了呀？
+
+code:
+    class HashMap:
+
+        def __init__(self, initial_size=10):
+            self.bucket_array = [None for _ in range(initial_size)]
+            self.p = 37
+            self.num_entries = 0
+
+        def put(self, key, value):
+            pass
+
+        def get(self, key):
+            pass
+
+        def get_bucket_index(self, key):
+            return self.get_hash_code(key)
+
+        #單純先能編碼
+        def get_hash_code(self, key):
+            key = str(key)
+            #for compression
+            # ex: num_buckets = 10
+            num_buckets = len(self.bucket_array)
+
+            current_coefficient = 1#p 的次方, p^0 =1
+            hash_code = 0
+            for character in key:
+
+                hash_code += ord(character) * current_coefficient
+                # **** compress hash_code
+                hash_code = hash_code % num_buckets
+
+
+                current_coefficient *= self.p
+                # **** compress coefficient
+                current_coefficient = current_coefficient % num_buckets
+
+            # **** one last compression before returning
+            return hash_code % num_buckets
+
+
+
+hash_map = HashMap()
+
+bucket_index = hash_map.get_bucket_index("abcd")
+print(bucket_index)
+->7
+
+hash_map = HashMap()
+
+bucket_index = hash_map.get_bucket_index("bcda")
+print(bucket_index)
+->8
+
+
+###########################
+# step3: Collision Handling
+############################
+
+上面因為用 % len(array) = %10, 因此會造成collision
+ex:
+    key 355, 1095 都會對應到 bucket 5
+
+
+There are two popular ways in which we handle collisions.
+
+Method 1. Closed Addressing or Separate chaining: 同 key 的 用 list 各自存起來, buckets 存的是一個 node list, data 存在node 中
+
+    => Closed addressing is a clever technique where we use the same bucket to store multiple objects.
+    The bucket in this case will store a linked list of key-value pairs.
+    Every bucket has it's own separate chain of linked list nodes.
+
+
+ex:  <hash value, value>
+    <355,'apple'>, <1095,'dog'>
+
+                                                                           Buckets
+                                                                                    "Closed Addressing or Separate chaining"
+    key xxxx,  hashing          hash value 355                             -----
+<xxxx,'apple'> ----> <355,'apple'> -------->                               | 4 |
+                                            \ compression by %10           -----
+                                             \-------------------->        | 5 | ----> Node:value=apple ---->  Node: value= dog
+                                             /      Collision              -----
+     key wwwww, hashing    hash value 1095  /                              | 6 |
+<wwwww,'dog'> ----> <1095,'dog'>  --------->                               -----
+                                                                           | 7 |
+                                                                           -----
+                                                                           | 8 |
+                                                                              .
+                                                                              .
+                                                                              .
+                                                                              .
+
+
+
+Method 2. Open Addressing
+=> In open addressing, we do the following: buckets 已經有人, 換一個能造成empty 的 hash function
+    a. If, after getting the bucket index, the bucket is empty, we store the object in that particular bucket
+    b. If the bucket is not empty, we find an alternate bucket index by
+        using another function which modifies the current hash code to give a new code
+
+
+
+
+
+Method1 有效且簡單, 我們這邊討論這個
+########################
+# Separate chaining
+#######################
+需要做在 put, get 中
+
+
+#先來看 put()
+    1. 把 value hashing 出來
+    2. 把新node 建起來
+    3. 找到屬於他的 buckets entry
+    4. while 這個list, 看看有沒有 == 同個key, 有的話更新value
+    5. 如果都沒有這個key, 把這個新nodw 放在此 entry 的 head
+    6. 記得 element number +1
+
+    ########################
+    # Put Time Complexity : avg O(n/b)
+    ########################
+        因為 #1 的生成bucket_indx 中需要編碼hash code, 但大家input string key 長度差不多, 當成一樣
+        因此決定性輪到下面的 while, 也就是linklst traversal 時間,worst case 就是所有element
+        都已經collision 在你當前這個linklist, 因此找到你要的key, 需要 O(n), 然而
+        我們已經用了質數編碼法, 這種情況幾乎不會發生
+
+
+        假設我們有 n 個 <key,value> inputs,ex:300 要存到 hashmap 的bucket 裡, 而 bucket size b= 10,
+        所以平均來說, 一個bucket 要負擔  n/b, 也就是 30/10 = 3 個input 會碰撞在一個bucket 中
+        因此 while 的 traversal link list 應該是 avg O(n/b)
+
+
+
+
+#get() 相對簡單, 就是去loop 同個buckets entry, 找到key
+        ########################
+        # get Time Complexity : avg O(n/b)
+        ########################
+
+class LinkedListNode:
+
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
+
+class HashMap:
+
+    def __init__(self, initial_size = 10):
+        self.bucket_array = [None for _ in range(initial_size)]
+        self.p = 31
+        self.num_entries = 0
+
+    def put(self, key, value):
+        #1
+        bucket_index = self.get_bucket_index(key)
+        #2,3
+        new_node = LinkedListNode(key, value)
+        head = self.bucket_array[bucket_index]
+
+        #4 check if key is already present in the map, and update it's value
+        while head is not None:
+            if head.key == key:
+                head.value = value
+                return
+            head = head.next
+
+        #5 key not found in the chain --> create a new entry and place it at the head of the chain
+        head = self.bucket_array[bucket_index]
+        new_node.next = head
+        self.bucket_array[bucket_index] = new_node
+        #6
+        self.num_entries += 1
+
+    def get(self, key):
+        bucket_index = self.get_hash_code(key)
+        head = self.bucket_array[bucket_index]
+
+        #Time Complexity : O(n/b), n/b is the avg nodes in buckert_array[index]
+        while head is not None:
+            if head.key == key:
+                return head.value
+            head = head.next
+        return None
+
+
+    def get_bucket_index(self, key):
+        bucket_index = self.get_hash_code(key)
+        return bucket_index
+
+    def get_hash_code(self, key):
+        key = str(key)
+        num_buckets = len(self.bucket_array)
+        current_coefficient = 1
+        hash_code = 0
+        for character in key:
+            hash_code += ord(character) * current_coefficient
+            hash_code = hash_code % num_buckets                       # compress hash_code
+            current_coefficient *= self.p
+            current_coefficient = current_coefficient % num_buckets   # compress coefficient
+
+        return hash_code % num_buckets                                # one last compression before returning
+
+    def size(self):
+        return self.num_entries
+
+
+
+
+
+
+############
+#Rehashing:
+############
+    剛才的例子是, n/b = 表示平均一個bucket 會碰撞的個數, 這個 n/b 又叫做 load factor, 一般希望在0.7 附近 或是 <= 0.7
+    也就是說, 幾乎不會碰撞, 剛才的 30/10 = 3 就太大了, 每個bucket 都碰撞,  這樣很慢
+
+    => 因此, 如果 load factor 太大, 就增加buckets size, 並且重新計算所有人並放到新的 buckets 中
+        (所有人hash code 一樣, 只換了compression function, 因此 buckest index 不一樣)
+
+#code: 加上rehashing
+
+class LinkedListNode:
+
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
+
+class HashMap:
+
+    def __init__(self, initial_size = 15):
+        self.bucket_array = [None for _ in range(initial_size)]
+        self.p = 31
+        self.num_entries = 0
+        self.load_factor = 0.7
+
+    def put(self, key, value):
+        bucket_index = self.get_bucket_index(key)
+
+        new_node = LinkedListNode(key, value)
+        head = self.bucket_array[bucket_index]
+
+        # check if key is already present in the map, and update it's value
+        while head is not None:
+            if head.key == key:
+                head.value = value
+                return
+            head = head.next
+
+        # key not found in the chain --> create a new entry and place it at the head of the chain
+        head = self.bucket_array[bucket_index]
+        new_node.next = head
+        self.bucket_array[bucket_index] = new_node
+        self.num_entries += 1
+
+        # check for load factor
+        current_load_factor = self.num_entries / len(self.bucket_array)
+        if current_load_factor > self.load_factor:
+            self.num_entries = 0
+            self._rehash()
+
+    def get(self, key):
+        bucket_index = self.get_hash_code(key)
+        head = self.bucket_array[bucket_index]
+        while head is not None:
+            if head.key == key:
+                return head.value
+            head = head.next
+        return None
+
+    def get_bucket_index(self, key):
+        bucket_index = self.get_hash_code(key)
+        return bucket_index
+
+    def get_hash_code(self, key):
+        key = str(key)
+        num_buckets = len(self.bucket_array)
+        current_coefficient = 1
+        hash_code = 0
+        for character in key:
+            hash_code += ord(character) * current_coefficient
+            hash_code = hash_code % num_buckets                       # compress hash_code
+            current_coefficient *= self.p
+            current_coefficient = current_coefficient % num_buckets   # compress coefficient
+        return hash_code % num_buckets                                # one last compression before returning
+
+    def size(self):
+        return self.num_entries
+
+    def _rehash(self):
+        #先備份一下
+        old_num_buckets = len(self.bucket_array)
+        old_bucket_array = self.bucket_array
+
+        #放大兩倍容量, 跟之前 stack 用array 在put 的時候
+        #且下面 self.bucket_array 也變大了, 間接影響到 hash code -> buckets index
+        num_buckets = 2 * old_num_buckets
+        #init
+        self.bucket_array = [None for _ in range(num_buckets)]
+
+        # loop 過每個 old buckets
+        for head in old_bucket_array:
+            #每個buckets 裡面的 collision list
+            while head is not None:
+                key = head.key
+                value = head.value
+                #put 裡面現在放到的是已經是增大兩倍的 buckets
+                self.put(key, value)         # we can use our put() method to rehash
+                head = head.next
+
+
+
+
+
+
+
+############
+# Delete: O(n/b)
+# 跟 get 差不多,  找到key 時, 依照當時node 在哪邊, 恢復linklist即可
+############
+    def delete(self, key):
+        bucket_index = self.get_bucket_index(key)
+        head = self.bucket_array[bucket_index]
+
+        previous = None
+        while head is not None:
+            if head.key == key:
+                # 如果previous == None, 這個bucket 的第一個node 就是你要delete 的
+                # 把 head.next 接上
+                if previous is None:
+                    self.bucket_array[bucket_index] = head.next
+                else:
+                    #如果 previous 有值, 那把head.next接給他
+                    previous.next = head.next
+
+
+                self.num_entries -= 1
+                return
+            else:
+                # 沒找到key ,就持續往前
+                previous = head
+                head = head.next
+
+.

@@ -204,7 +204,77 @@ case1: leaf node
 case2: node has 1 child node
 case3: node has 2 child nodes
 
+    code:
+        def minValueNode(self, node):
+            current = node
 
+            # loop down to find the leftmost leaf
+            while(current.left is not None):
+                current = current.left
+
+            return current
+
+        def delete(self,node,key):
+            #input , root, key
+            #return the root of new tree (這個tree 就是以node為root的tree, 對於每個階層就是sub tree)
+
+            #base case
+            if node == None:
+                return node
+
+
+            #go left or right to find the delete key
+            # 如果這個node 不是 key, 那就看是往左還是往右
+            if key < node.value:
+                # 想法是: 當前的node.left 要接上誰呢？
+                # 看看以 node.left 為root 的子樹, 刪完key後, 這個子樹
+                # 的 root 回傳上來讓 node.left 接
+
+                #簡單說, 現在我知道 key 在node 左邊
+                #肯定往左邊要刪一個, 那我之後的 node.left 要接上誰呢？ 你回傳給我
+                # 如果一直call 下去都沒找到key, base case 會return None, 則上一層 node.left = None
+                # 保持原狀
+                node.left = self.delete(node.left,key)
+
+            elif key > node.value:
+                node.right = self.delete(node.right,key)
+
+            else: # key == node.value, 要刪
+
+                #刪除有3個case 要討論, 但主要idea 就是決定回傳誰,去給上一層的parent 接
+
+                ##############
+                # case 1, 2
+                ##############
+                # child with only one child or no child = leaf
+                # 因為當下這個node 即將被刪除, 他左或是右child 有一個要留下
+                # 當然如果都沒有左右child , 下直接進第一個if, 把 tmp = node.right = None return 上去
+
+                #左邊null, 回傳右邊
+                if node.left is None:
+                    tmp = node.right
+                    #delete node
+                    node = None
+                    return tmp #return 給上層 node.left or node.right 去接, 因此救活了node的child (與parent 相連了)
+                elif node.right is None:
+                    tmp = node.left
+                    node = None
+                    return tmp #return tmp 上去表示, 這層的node 就是key, 他的左邊還有人, 往parent 接
+
+                ##############
+                # case 3, 兩個child
+                ##############
+                # Rule: 往右子樹中, 找最小值, 也就是往他的右子數中最左邊的nodeMin 找到後, 取代被刪除的node
+                # 因為這個 nodeMin , 就是比剛才被刪除的node 次大一個的node, 把它拉上來取代, 其他的結構都不用動, 大小關係還是維持
+
+                nodeMin = self.minValueNode(node.right)
+                #取代了
+                node.value = nodeMin.value
+
+                #上面等於把 nodeMin 往上拉了, 之後把nodeMin刪了
+                node.right = self.delete(node.right,nodeMin.value)
+
+            return node
 
 
 
