@@ -1,0 +1,26 @@
+'''
+Provide your reasoning behind decisions made in the code.
+For example,
+why did you use that data structure?
+You also need to explain the efficiency (time and space) of your solution.
+'''
+
+Because we need to process all operation in time complexity O(1),
+we need a hashmap to help us to access each key in O(1).
+Ex:
+hashmap: keyNodemap =<key, Node>
+
+We use the double link list to create a  "tasks linklist" with the time order from list head to tail.
+
+
+Get(): O(1)
+    Directly find the value from hashmap self.keyNodemap.val.
+
+Set(): O(1)
+    Case1, add new key:  O(1)
+        add new key and append the Node to the tail of tasks link list.
+    Case2, update the existed key: O(1)
+        1. Find the key-Node by  self.keyNodemap[key]
+        2.Update value
+        3.correct the prev, next link and move the node to the tail.
+        4.If the list size bigger then capacity, move self.head to the next node.

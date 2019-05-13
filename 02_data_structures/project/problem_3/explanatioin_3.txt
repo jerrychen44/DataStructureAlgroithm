@@ -1,0 +1,74 @@
+For Huffman encoding and decoding problem.
+It simply think about the binary tree structure because we need to encode something by 0(left) or 1(right).
+So, we need a Node() class and use priority queue to keep tracking the Node order by frequency from low to high.
+It turns out, the high frequency char with the short distance to the root of the tree, which means with short encoded bit, the
+low frequency char with the longer distance to the root(with longer encoded bit).
+
+
+
+n is the number char of the input string.
+###########
+# Encode:
+##########
+Time complexity:
+
+    1.Take a string and determine the relevant frequencies of the characters.
+        => looping all the data. O(n)
+    2.Build and sort a list of tuples from lowest to highest frequencies.
+        => looping all the data. O(n)
+
+    3.Build the Huffman Tree by assigning a binary code to each letter, using shorter codes for the more frequency letters.
+        => keep pop out 2 low frequency node from queue and push back with a merged internal node.
+        => Max number will not over O(n)
+
+    4.Trim the Huffman Tree (remove the frequencies from the previously built tree).
+        => We skip this step.
+    5.Encode the text into its compressed form.
+        => looping all the data O(n), and each char might need O(logn = height) to get encoded bit in worst case.
+        => O(nlogn)
+
+    ans: O(3n + nlogn) => O(nlogn)
+
+
+Space complexity
+    1.Take a string and determine the relevant frequencies of the characters.
+        =>frq_dic = {}, for tracking the frequency of each char. O(n)
+    2.Build and sort a list of tuples from lowest to highest frequencies.
+        =>sorted_heap_node=[], O(n)
+    3.Build the Huffman Tree by assigning a binary code to each letter, using shorter codes for the more frequency letters.
+        => Tree contain with Nodes which build by input char and internal nodes.
+        => O(charNode + internalNode) = O(n + will not over n) = O(2n) = O(n)
+    5.Encode the text into its compressed form.
+        =>encode_map_char_bit = {} hashmap to map char to encoded bit. O(n)
+
+    ans: O(n)
+
+
+##########
+# Decode:
+##########
+
+n is total bit string length.
+
+Time complexity:
+    1.Decode the text from its compressed bits form reverse mapping table encode_map_bit_char.
+        => O(n)
+Space complexity:
+    Need one mapping table from bit to char, encode_map_bit_char ={}
+        => O(n)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.

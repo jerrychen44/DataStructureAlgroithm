@@ -1,0 +1,18 @@
+'''
+Provide your reasoning behind decisions made in the code.
+For example,
+why did you use that data structure?
+You also need to explain the efficiency (time and space) of your solution.
+'''
+
+Data structure I use a list to save all possible answers.
+Writing the code as recursion style is because we exploring each sub-folder with the same behavior.
+
+Idea:
+    if we found there is a folder, we jump into this folder and do the same thing.
+    if we found this is not a folder, we check the suffix and .c string in this file name or not.
+        if yes, we save the file path as our answer.
+
+
+Time complexity : O(N) is because we need to check every files and folder. N is the number of total files and folders.
+Space : O(N) for rst=[] , in worst case we have all files matched the suffix and '.c' in their file name.
