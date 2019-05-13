@@ -1,0 +1,8 @@
+Because there are sub-groups inside the current group, we try to traversal all possible group by DFS.
+We check the user exist or not when we pass the group.groups to the new recursive call.
+
+
+Time complexity:
+    O(n), n is the total group number.
+Space complexity:
+    O(n) for creating Group classes.
