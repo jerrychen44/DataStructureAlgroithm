@@ -1,0 +1,23 @@
+Use linklist because the requirement from problem.
+
+
+
+n is the number of items in list1, m is the number of items in list2
+
+Union
+Time complexity:
+    O(n+m)
+
+Space complexity:
+    appeared_map ={} for tracking which item appeared before.
+    O(n+m)
+
+
+
+Intersection
+Time complexity:
+    O(n+m)
+
+Space complexity:
+    appeared_map ={} for tracking which item appeared before.
+    O(n+m)

@@ -1,0 +1,9 @@
+The problem description said that we use a linklist to implement the blockcahin.
+
+
+Insert()
+Time complexity.
+    O(1), since we just create a new node and do some link assign.
+
+Space complexity.
+    O(1), create a new node.
