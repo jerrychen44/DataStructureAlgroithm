@@ -133,21 +133,32 @@ print('test case1')
 userid = 'Y3_user'
 findgroup=parent
 print(is_user_in_group(userid,findgroup))
-
+'''
+output:
+find usr Y3_user in  subchild3_group
+True
+'''
 print('test case2')
 userid = '2_user'
 findgroup=child2
 print(is_user_in_group(userid,findgroup))
-
+'''
+False
+'''
 
 print('test case3')
 userid = ''
 findgroup=sub_child3
 print(is_user_in_group(userid,findgroup))
-
+'''
+False
+'''
 
 print('test case4')
 userid = '2_user'
 findgroup=None
 print(is_user_in_group(userid,findgroup))
+'''
+False
+'''
 ##

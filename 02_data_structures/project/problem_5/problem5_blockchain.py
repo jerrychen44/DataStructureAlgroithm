@@ -96,14 +96,16 @@ blackchain = BlockChiain()
 blackchain.insert('test')
 time.sleep(1)#for different timestamp
 blackchain.print_all_chain()
+#output: [ Tue May 14 16:27:12 2019,test,0,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08]
 blackchain.insert('test2')
 blackchain.print_all_chain()
+#output: [ Tue May 14 16:27:12 2019,test,0,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08][ Tue May 14 16:27:13 2019,test2,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,60303ae22b998861bce3b28f33eec1be758a213c86c93c076dbe9f558c11c752]
 time.sleep(2)
 blackchain.insert('apple')
 blackchain.print_all_chain()
+#output: [ Tue May 14 16:27:12 2019,test,0,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08][ Tue May 14 16:27:13 2019,test2,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,60303ae22b998861bce3b28f33eec1be758a213c86c93c076dbe9f558c11c752][ Tue May 14 16:27:15 2019,apple,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,3a7bd3e2360a3d29eea436fcfb7e44c735d117c42d1c1835420b6b9942dd4f1b]
+
 print(blackchain.elements)
-
-
-
+#output:3
 
 #

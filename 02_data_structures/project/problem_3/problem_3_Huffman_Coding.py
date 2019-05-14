@@ -154,9 +154,12 @@ def get_encoded_text(text):
 		encoded_text += encode_map_char_bit[character]
 	return encoded_text
 
-encode_map_char_bit = {}
-encode_map_bit_char = {}
-def huffman_encoding(data):
+
+def huffman_encoding(data,encode_map_char_bit,encode_map_bit_char):
+
+    if data == None or len(data) ==0:
+        print('input data with some problem!')
+        exit()
     #print('input:', data)
     ##########################################################################
     #1.Take a string and determine the relevant frequencies of the characters.
@@ -215,17 +218,19 @@ def huffman_decoding(encoded_data,tree):
 if __name__ == "__main__":
     codes = {}
 
+
+    #########
+    # test1
+    ########
+    encode_map_char_bit = {}
+    encode_map_bit_char = {}
+    print('test1')
     a_great_sentence = "The bird is the word"
-    a_great_sentence = "how Are You today?"
-    a_great_sentence = "123"
-
-
-
 
     print ("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
     print ("The content of the data is: {}\n".format(a_great_sentence))
 
-    encoded_data, tree = huffman_encoding(a_great_sentence)
+    encoded_data, tree = huffman_encoding(a_great_sentence,encode_map_char_bit,encode_map_bit_char)
 
     print ("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
     print ("The content of the encoded data is: {}\n".format(encoded_data))
@@ -234,3 +239,85 @@ if __name__ == "__main__":
 
     print ("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
     print ("The content of the encoded data is: {}\n".format(decoded_data))
+    '''
+    output:
+        The size of the data is: 69
+
+        The content of the data is: The bird is the word
+
+        The size of the encoded data is: 36
+
+        The content of the encoded data is: 1000111111100100001101110000101110110110100011111111001101010011100001
+
+        The size of the decoded data is: 69
+
+        The content of the encoded data is: The bird is the word
+    '''
+    #########
+    # test2
+    ########
+    encode_map_char_bit = {}
+    encode_map_bit_char = {}
+    print('test2')
+    a_great_sentence = "How Are You today?"
+
+    print ("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
+    print ("The content of the data is: {}\n".format(a_great_sentence))
+
+    encoded_data, tree = huffman_encoding(a_great_sentence,encode_map_char_bit,encode_map_bit_char)
+
+    print ("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
+    print ("The content of the encoded data is: {}\n".format(encoded_data))
+
+    decoded_data = huffman_decoding(encoded_data, tree)
+
+    print ("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+    print ("The content of the encoded data is: {}\n".format(decoded_data))
+
+
+    '''
+    output:
+        The size of the data is: 67
+
+        The content of the data is: How Are You today?
+
+        The size of the encoded data is: 36
+
+        The content of the encoded data is: 100011010011110110101100001110010110001111101111100101010010100001
+
+        The size of the decoded data is: 67
+
+        The content of the encoded data is: How Are You today?
+    '''
+
+
+    #########
+    # test3
+    ########
+    encode_map_char_bit = {}
+    encode_map_bit_char = {}
+    print('test3')
+    a_great_sentence = ""
+
+    print ("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
+    print ("The content of the data is: {}\n".format(a_great_sentence))
+
+    encoded_data, tree = huffman_encoding(a_great_sentence,encode_map_char_bit,encode_map_bit_char)
+
+    print ("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
+    print ("The content of the encoded data is: {}\n".format(encoded_data))
+
+    decoded_data = huffman_decoding(encoded_data, tree)
+
+    print ("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+    print ("The content of the encoded data is: {}\n".format(decoded_data))
+
+    '''
+    output:
+
+        The size of the data is: 49
+
+        The content of the data is:
+
+        input data with some problem!
+    '''

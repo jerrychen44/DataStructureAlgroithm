@@ -165,6 +165,12 @@ for i in element_2:
 #print(linked_list_2)
 print('union')
 print (union(linked_list_1,linked_list_2))
+'''
+output:
+union
+    3/78d -> 2/790 -> 4/794 -> 35/797 -> 6/79b -> 65/79e -> 6/7a2 -> 4/7a5 -> 3/7a9 -> 21/7ac -> 32/7b3 -> 9/7ba -> 1/7c1 -> 11/7c5 ->
+'''
+
 
 ################
 # because I reused the list1, so the list1 has been changed as ans which doesn't need extra space.
@@ -183,7 +189,12 @@ for i in element_2:
 
 print('intersection')
 print (intersection(linked_list_1b,linked_list_2b))
+'''
+output:
 
+intersection
+    6/7eb -> 4/7f2 -> 21/008 ->
+'''
 
 
 
@@ -202,9 +213,11 @@ for i in element_2:
     linked_list_4.append(i)
 print('union')
 print (union(linked_list_3,linked_list_4))
-
-
-
+'''
+output:
+union
+    3/7ef -> 2/7b7 -> 4/789 -> 35/7cf -> 6/7d3 -> 65/7d6 -> 6/7da -> 4/7dd -> 3/7e1 -> 23/7e4 -> 1/7be -> 7/00b -> 8/004 -> 9/00f -> 11/012 -> 21/016 ->
+'''
 
 linked_list_3b = LinkedList()
 linked_list_4b = LinkedList()
@@ -218,7 +231,11 @@ for i in element_2:
 print('intersection')
 print (intersection(linked_list_3b,linked_list_4b))
 
-
+'''
+output:
+intersection
+None of Node in this list
+'''
 
 
 # Test case 3
@@ -237,7 +254,13 @@ for i in element_2:
 print('union')
 print (union(linked_list_5,linked_list_6))
 
+'''
+output:
 
+union
+    3/024 -> 2/027 -> 4/02b -> 35/02e -> 6/032 -> 65/035 -> 6/039 -> 4/03c -> 3/01d -> 23/05c ->
+
+'''
 
 
 linked_list_5b = LinkedList()
@@ -251,7 +274,12 @@ for i in element_2:
     linked_list_6b.append(i)
 print('intersection')
 print (intersection(linked_list_5b,linked_list_6b))
+'''
+output:
 
+intersection
+None of Node in this list
+'''
 
 
 # Test case 4
@@ -270,7 +298,13 @@ for i in element_2:
 print('union')
 print (union(linked_list_7,linked_list_8))
 
+'''
+output:
 
+union
+    1/071 -> 7/074 -> 8/078 -> 9/07b -> 11/07f -> 21/082 -> 1/063 ->
+
+'''
 
 
 linked_list_7b = LinkedList()
@@ -284,7 +318,12 @@ for i in element_2:
     linked_list_8b.append(i)
 print('intersection')
 print (intersection(linked_list_7b,linked_list_8b))
+'''
+output:
 
+intersection
+None of Node in this list
+'''
 
 # Test case 5
 print('test case 5')
@@ -301,9 +340,14 @@ for i in element_2:
     linked_list_10.append(i)
 print('union')
 print (union(linked_list_9,linked_list_10))
+'''
+output:
+
+union
+None of nodes could be union
 
 
-
+'''
 
 linked_list_9b = LinkedList()
 linked_list_10b = LinkedList()
@@ -316,3 +360,9 @@ for i in element_2:
     linked_list_10b.append(i)
 print('intersection')
 print (intersection(linked_list_9b,linked_list_10b))
+'''
+output:
+
+intersection
+None of Node in this list
+'''

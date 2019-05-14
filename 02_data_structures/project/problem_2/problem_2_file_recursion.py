@@ -103,11 +103,11 @@ def local_test():
 #local_test()
 
 print(find_files('b', '.'))
-#['./testdir/subdir3/subsubdir1/b.c']
+#output: ['./testdir/subdir3/subsubdir1/b.c']
 
 
 print(find_files('b', ''))
-#[]
+#output:[]
 
 print(find_files('b', './testdir/subdir5'))
-#[]
+#output:[]

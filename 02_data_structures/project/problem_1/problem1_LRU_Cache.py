@@ -185,7 +185,12 @@ print(our_cache.get(1))     # returns 1
 print(our_cache.get(2))      # returns 2
 print(our_cache.get(3))      # return -1
 
-
+'''
+output:
+-1
+2
+-1
+'''
 
 
 print('== test case 2')
@@ -206,14 +211,30 @@ our_cache.set(3, 99)
 our_cache.printlist()
 print(our_cache.get(3))
 our_cache.printlist()
-
+'''
+output:
+[1,1][2,2][3,3]
+[2,2][3,3][4,4]
+-1
+2
+3
+4
+-1
+[2,2][3,3][4,4]
+[2,2][4,4][3,99]
+99
+[2,2][4,4][3,99]
+'''
 
 
 print('== test case 3')
 our_cache = LRU_Cache(0)
 our_cache.set(1, 1)
 print(our_cache.get(1))
-
+'''
+output:
+-1
+'''
 
 
 print('== test case 4')
@@ -225,3 +246,9 @@ our_cache.set(1, 91)
 our_cache.printlist()
 
 print(our_cache.get(2))
+'''
+output:
+[1,1][2,33]
+[2,33][1,91]
+33
+'''
