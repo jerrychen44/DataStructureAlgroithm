@@ -1,0 +1,14 @@
+
+In summary:
+    針對一個已經sorted 的物件, 且能分辨得出是 target > or < 
+
+    1.Binary search is a search algorithm where we find the position of a target value
+        by comparing the middle value with this target value.
+
+    2.If the middle value is equal to the target value,
+        then we have our solution (we have found the position of our target value).
+
+
+    3.If the target value comes before the middle value, we look for the target value in the left half.
+    4.Otherwise, we look for the target value in the right half.
+    5.We repeat this process as many times as needed, until we find the target value.
