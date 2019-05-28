@@ -1,0 +1,120 @@
+
+
+Data structure: Heap
+必須滿足
+    1. complete binary tree (CBT)
+    2. Heap Order Property (加上自訂的 priority 設定, ex: min-Heap,  就是 parent 一定 < child_
+
+
+
+
+
+分別細看
+    1. complete binary tree
+        a.binary tree 以外新增下列特色
+            特色: 1,最後一層之前都要填滿 (避開skew)
+                 2.最後一層一定由左到右  (如果沒有這個特色, 那只是一般的bt, 可以最後一層, 左右都是只有左child, 因此最後一層是 node None, Node, None )
+        b.且因為是complete, 每一層滿員的個數是 2^(h-1) ,
+            ex:
+            level x 時, 全滿當層會有 ? nodes
+                level 1 = 2^0 = 1 node root,
+                level 2 = 2^1 = 2 nodes ,
+                level 3 = 2^2 = 4 nodes ,
+                level 4 = 2^3 = 8 nodes ,
+                level 5 = 2^4 = 16 nodes,
+                    ......
+                level h = 2^(h-1) nodes
+
+                因此, 可以用array 來實作,  如果最後一個idex 停在 6, 那你就知道, level4 還沒滿, 新的item 要繼續放在 index 7
+                從上面來看, 可以發現在第 h level 最多有 h = 2^(h-1) nodes,
+                    => Max number of nodes in hth level =  2^(ℎ−1)
+
+
+
+
+                再觀察一下, 從level1~levelh 所有的nodes 數 = 2^h  -1, 你用bit 去想, level1 = bit 0 是 1
+                所以 => max number of nodes from 1st level to hth level =  2^ℎ −1
+                    =>n 一定 <= 所有nodes,
+                    => *** n <= 2^h  -1...........(A)
+
+                剛才  2^h - 1 是 第一層到~h 層所有的nodes 數, 那從第一層~ (h-1) 層就是 2^(h-1) -1數
+
+                因此, n 一定也 > 前一層的總數, 因為n自己在h層, *** n > 2^(h-1)-1, 就幫右邊 +1, 然後改成 >=
+                    => n >= 2^(h-1) ............(B)
+
+
+
+                A,B兩式都取log
+                A:  n+1 <= 2^h, log(n+1) <= h ,  h >= log(n+1)
+                B:  n >= 2^(h-1), logn >=h-1, h <= logn + 1
+
+                因此    log(n+1) <= h <= logn +1, 也就是說  O(h) = O(logn) level
+
+                所以用 complete binary tree 操作 insert, delete 要跑完整棵樹的高度 h , 是 O(logn)
+                    ->相較於binary tree 在insert delete 可能遇到skew的worst case O(n), CBT 就好很多
+
+
+
+
+    2. Heap Order Property
+        min-heap
+        max-heap
+
+
+
+#######################
+# implement use array
+######################
+
+最重要的是要觀察出 CBT tree 的 index 關係
+
+
+
+         0
+      1     2
+    3  4   5  6
+
+
+
+知道parent index -> 找左右child indx
+假設 parent 是 index p, 他的左child在array 的index是 2*p+1,  右child 是 2*p+2
+
+
+知道自己index -> 找parent index
+自己是 x, p = (x-1)//2, p 是parent idx
+
+
+
+
+
+Operations:
+
+假設 min-heap
+
+#############################
+Insert with Time complexity: O(logn)
+############################
+only 2 steps:
+    1. insert 在最後 (自然是 CBT 的最left nodes)
+        => O(1)
+    2. up-heapify (一路往他的parent 比較, 如果parent 比new item 大, 兩者swap, 小的當parent, 直到parent 真的比較小stop)
+        =>這裡就是剛才講的 worst caseO(h) = log(n)
+    3.如果發現array 已經滿, 兩倍它
+
+
+#############################
+Remove with Time complexity: O(logn)
+############################
+如果是 min-heap
+    Step1. root 跟最後一個node 交換後, 移除root
+        =>因為直接從root 移掉會造成 array 有個空洞, 旁邊的ele 都要shift , 不太可能做, 想想也只有最後一個item 移掉比較輕鬆
+            因此 root 跟 最後一個node 交換, 再delete
+        => O(1)
+    Step2. Down-heapfiy
+        => 這時候的root 因為step1 是隨便移上來的, 打破了min-heap 的規定, 因此開始往下調整
+            一樣, 它必須比他的左和右child 小, 如果不是, 交換那個最小的child, 一路往下
+        =>這裡就是剛才講的 worst caseO(h) = log(n)
+
+
+
+#
