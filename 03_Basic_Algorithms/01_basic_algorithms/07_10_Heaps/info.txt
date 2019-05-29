@@ -117,4 +117,9 @@ Remove with Time complexity: O(logn)
 
 
 
+
+
+當你能用 min-heap 配合 array 實作後
+你就得到一個 priority queue 了
+
 #

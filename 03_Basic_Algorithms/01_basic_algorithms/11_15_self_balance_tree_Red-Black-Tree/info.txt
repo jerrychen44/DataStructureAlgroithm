@@ -1,0 +1,488 @@
+Red-Black Tree
+是 self balance tree 的一種 (那些在operation 中會維持自己balance 的樹種)
+=>check the png under the folder Red-black_tree.png
+
+
+紅黑樹 = 維持紅黑樹Rules + BST特性
+
+Rule:
+    1.All nodes have a color
+    2.All nodes have two children (use NULL nodes)
+        2.a All NULL nodes are colored black
+    3.If a node is red, its children must be black
+    4.The root node must be black (optional)
+    5.Every path to its descendant NULL nodes must contain the same number of black nodes
+
+Rule:
+    1.All Nodes 被分為紅色或是黑色, 你要能分辨這兩類的nodes
+    2.所有Node 有兩個 child, 沒值的地方用Null 當nodes
+        2.Null nodes 要被認為是黑色
+    3.如果此node 是 RED 他的children 是黑 (造成:從每個葉子到根的所有路徑上不能有兩個連續的紅色節點)
+    4.(optional,不一定被要求) root 一定是黑
+  **5.所有從black node 往下走到 null node 的"黑色節點數目" (也因此維持了balance tree)
+    =>從任一節點到其每個葉子的所有路徑都包含相同數目的黑色節點
+    ps.insert 一定是red
+
+
+Insert 是所有神奇的開始: 維持紅黑樹Rules + BST特性
+
+
+一步一步來
+
+================
+基本 class 架構
+================
+
+class Node(object):
+    def __init__(self, value, parent, color):
+        self.value = value
+        self.left = None
+        self.right = None
+        #new for RBT
+        self.parent = parent
+        self.color = color
+
+class RedBlackTree(object):
+    def __init__(self, root):
+        self.root = Node(root, None, 'red')
+
+    def insert(self, new_val):
+        pass
+
+    def search(self, find_val):
+        return False
+
+
+===============
+ Insert
+    1. 用傳統BST 架構找到新insert node位置
+    2. return 這個新node , 準備拿去rebalance()
+===============
+
+step1:先把insert 套上傳統的BST, 畢竟他放data 還是要照著左邊小右邊大去走
+
+class RedBlackTree(object):
+    def __init__(self, root):
+        self.root = Node(root, None, 'red')
+
+    # insert, insert_helper 只是傳統BST, 差在new 的node 多了一些屬性
+    def insert(self, new_val):
+        self.insert_helper(self.root, new_val)
+
+    def insert_helper(self, current, new_val):
+        #new val 比cur node大, 往右放
+        if current.value < new_val:
+            if current.right:#如果右邊已經有值, recursive call 下去繼續比較
+                self.insert_helper(current.right, current, new_val)
+            else:#如果右邊是Null, 可以new Node 來放
+                current.right = Node(new_val, current, 'red')
+        else:#往左的case
+            if current.left:
+                self.insert_helper(current.left, current, new_val)
+            else:
+                current.left = Node(new_val, current, 'red')
+
+
+
+step2:加上rotaion 功能
+=> 上面只是按照binary 去找到適當的位置去新增node, 但要滿足
+RBT, 要開始對這些新增的node 和整個樹做調整
+=>所以第一要務, 剛剛那些新增的node, 要先return 出去, 讓外面的人能拿到, 才能接著
+對他調整, 因此我們先把 insert_helper 加上return, 讓 insert 可以接到這顆新增的RED node
+,接著開始調整, call rebalence()
+
+
+class RedBlackTree(object):
+    def __init__(self, root):
+        self.root = Node(root, None, 'red')
+
+    # insert, insert_helper 只是傳統BST, 差在new 的node 多了一些屬性
+    def insert(self, new_val):
+        new_node = self.insert_helper(self.root, new_val)
+        self.rebalance(new_node)
+
+    def insert_helper(self, current, new_val):
+        #new val 比cur node大, 往右放
+        if current.value < new_val:
+            if current.right:#如果右邊已經有值, recursive call 下去繼續比較
+                return self.insert_helper(current.right, current, new_val)
+            else:#如果右邊是Null, 可以new Node 來放
+                return current.right = Node(new_val, current, 'red')
+        else:#往左的case
+            if current.left:
+                return self.insert_helper(current.left, current, new_val)
+            else:
+                return current.left = Node(new_val, current, 'red')
+
+===============
+ Insert::rebalance()
+===============
+Case 1
+    We have just inserted the root node
+    =>假設我們insert 就是root node, 那也不用調整啥, return
+
+Case 2
+    We inserted under a black parent node
+    =>因為我們自己新insert的一定是red, 我們把原本parent 的某個Null child 黑色
+        取代掉了成為紅色的我, 但這不影響特性
+        =>從任一節點到其每個葉子的所有簡單路徑都包含相同數目的黑色節點, 特性與
+            紅色節點無關, 因此也不用調整, return
+ex:
+def rebalance(node):
+    # Case 1
+    if node.parent == None:
+        #如有要求root一定要black, 可以這邊改
+        #node.color = black
+        return
+    # Case 2
+    if node.parent.color == 'black':
+        return
+
+
+
+Case 3
+    遇到 :新增node 的parent 紅, 兄弟紅
+
+    The parent and its sibling of the newly inserted node are both red
+    新增的node叫做 new_node,
+        當遇到new_node 的 "parentA 還有他的兄弟B 都是紅色時(隱含AB的parentC 是黑色,就是new_node的祖父)
+        =>要flip color 把 AB 改成黑, C改成RED
+
+    =>如果新增node 的parent和他的兄弟是red,則把他們兩個先改成black, 然後把祖父改成紅的
+    來保持黑色節點到null 的數量, 還是一樣, 只是黑色換人當, 但這一改動, 將會持續往上改
+    因為剛才被改成red 的 祖父, 如果他的兄弟也是紅色的, 要繼續往上重新上色
+    也就是這會是一個recursive call (到root 停, 至於root什麼顏色就看有沒有要求一定要black)
+
+
+code:
+這次先專注在上述的 "換色 color flip 邏輯",
+假設 1.pibling() return parent 的一個兄弟的顏色
+    2.grandparent() return 此祖父的node
+    這兩個fun 等下再做,簡單
+
+def rebalance(node):
+    # Case 1
+    if node.parent == None:
+        #如有要求root一定要black, 可以這邊改
+        #node.color = black
+        return
+    # Case 2
+    if node.parent.color == 'black':
+        return
+
+    # From here, we know parent's color is red
+    # Case 3
+    # 為什麼這邊只需要看 parent 的兄弟顏色呢？
+    # 因為 parent 的顏色 case2 已經check過了,
+    # 能走到這裡沒return , 就是 parent color = red
+    if pibling(node).color == 'red':
+        # flip color
+        # parent 和兄弟改成black
+        pibling(node).color = 'black'
+        node.parent.color = 'black'
+        # 祖父改成紅
+        grandparent(node).color = 'red'
+        #recursive call 把 最後改好的 grandparent node 當成新node
+        #繼續往上調整到root, case1 會stop
+        self.rebalance(grandparent(node))
+
+
+
+case4:
+    遇到 :新增node 的parent 紅, 兄弟黑
+
+    這時候, 再確定一下, 是屬於 outside or inside case
+
+    outside case:
+        new nodes 跟他的 parent 對於祖父來說, 都在同一邊 -> case 5
+
+                ------
+                | gp |
+                ------
+               /       \
+        ------
+        | p |
+        ------
+       /       \
+------
+| new|
+------
+
+OR
+
+                ------
+                | gp |
+                ------
+               /       \
+                        ------
+                        | p |
+                        ------
+                       /       \
+                                ------
+                                | new|
+                                ------
+
+
+
+    inside case:
+        a.new nodes 是parent 的 左child, 而parent是祖父的 右child
+
+                            ------
+                            | gp |
+                            ------
+                           /       \
+                                    ------
+                                    | p |
+                                    ------
+                                   /       \
+                            ------
+                            | new|
+                            ------
+
+                                |  做 new, p 順時針 rotation_right
+                                |   變成 case 5, 也就是上面的 outside case
+                                v
+
+                            ------
+                            | gp |
+                            ------
+                           /       \
+                                    ------
+                                    | new |
+                                    ------
+                                   /       \
+                                            ------
+                                            | p  |
+                                            ------
+
+
+
+        b.new nodes 是parent 的 右child, 而parent是祖父的 左child
+
+                                ------
+                                | gp |
+                                ------
+                               /       \
+                        ------
+                        | p |
+                        ------
+                       /       \
+                                ------
+                                | new|
+                                ------
+
+                                    |  做 new, p 逆時針 rotation_left
+                                    |   變成 case 5, 也就是上面的 outside case
+                                    v
+
+                                ------
+                                | gp |
+                                ------
+                               /       \
+                            ------
+                            | new |
+                            ------
+                           /       \
+                    ------
+                    | p  |
+                    ------
+
+
+
+        =>需要做 rotation
+            rotation 後, 就會變成case 5, 接著做case 5
+
+
+
+code:
+
+
+def rebalance(node):
+    # Case 1
+    if node.parent == None:
+        #如有要求root一定要black, 可以這邊改
+        #node.color = black
+        return
+
+    # Case 2
+    if node.parent.color == 'black':
+        return
+    # Case 3
+    if pibling(node).color == 'red':
+        # flip color
+        pibling(node).color = 'black'
+        node.parent.color = 'black'
+        grandparent(node).color = 'red'
+        self.rebalance(grandparent(node))
+
+    # Case 4
+    # 這邊先看架構, rotate_left/right 等下再補
+    gp = grandparent(node)
+    #檢查是不是 insdie case
+    # gp的左邊有child=parent, 而新node 是parent的右邊
+    # 上面圖的 case b.
+    if gp.left and node == gp.left.right:
+        #逆時針rotate, 輸入 new node 的parent
+        # 因為要被調整的只有左下角的小subtree, 而這組subtree的root是new node的parent
+        # 因此給 parent node 當作input
+        self.rotate_left(parent(node))
+    elif gp.right and node == gp.right.left:
+        self.rotate_right(parent(node))
+
+
+OK, 那把 rotation 做起來
+
+
+                                ---------
+                                |  p 19 |
+                                ---------
+                               / /       \
+                        ---------       X NULL
+                        | node 13|
+                        ---------
+                       /       \\
+                     A NULL     ---------------------
+                                | node_moving_up 16 |
+                                ---------------------
+                                    /        \
+                                B NULL        C Null
+
+
+                                    |  做 new, p 逆時針 rotation_left
+                                    |
+                                    v
+
+                                    ------------
+                                    | p 19     |
+                                    ------------
+                            (D) /   /(E)         \
+                        ---------------------     X NULL
+                        | node_moving_up 16 |
+                        ---------------------
+                     (B) /   / (C)          \
+                    -----------
+                    | node 13 |           C NULL
+                    -----------
+                    /        \(A)
+                A NULL      B NULL
+
+
+***
+    注意, rotate_left 的 input node, 要給的
+    是 "那個要被調整範圍的的 subtree 的 root"
+
+***
+    簡單想就是, 以你輸入的node, 為中心, 他和他的兩個child, 逆時針走一格
+    , 除了他和他的兩個child 會動到之外, 他兩個child 接的東西都不會動
+
+def rotate_left(self, node):
+    # Save off the parent of the sub-tree we're rotating
+    p = node.parent
+
+    node_moving_up = node.right
+
+
+    # 這邊不是很了解 右child 變成左child 的原理
+    # 應該直觀地想, node左child, 和 node_moving_up 右 child
+    # 不會被動報, 因為兩個node 單純上下換位置, 唯一會被動到的
+    # 就是 node 右child, 本來接著 node_moving_up, 現在空出來了
+    # 另一方面, node_moving_up 原本左child 現在接上了 node,
+    # 因此 node_moving_up 原本的左child 就給 node 右child 接去了
+
+    # After 'node' moves up, the right child will now be a left child
+    node.right = node_moving_up.left  #(A)
+
+    # 'node' moves down, to being a left child
+    node_moving_up.left = node #(B)
+    node.parent = node_moving_up #(C)
+
+    # Now we need to connect to the sub-tree's parent
+    # 'node' may have been the root
+    if p != None:
+        if node == p.left:
+            p.left = node_moving_up #(D)
+        else:
+            p.right = node_moving_up
+    node_moving_up.parent = p #(E)
+
+
+
+def rotate_right(self, node):
+    p = node.parent
+
+    node_moving_up = node.left
+    node.left = node_moving_up.right
+
+    node_moving_up.right = node
+    node.parent = node_moving_up
+
+    # Now we need to connect to the sub-tree's parent
+    if p != None:
+        if node == p.left:
+            p.left = node_moving_up
+        else:
+            p.right = node_moving_up
+    node_moving_up.parent = p
+
+
+=> OK 目前為止, case 4 結束了, 他都會把node 轉成 case5
+
+
+
+Case 5:
+    發現: new node, 和他的parent node 都是紅色, 且都在祖父同一邊
+        1.如果都在左邊: 需要 rotation RIGHT, 反之亦然
+        2.交換 parent, garndparent 顏色, 維持還是只有一個 black node
+
+                                    ________________
+                                   /                \
+                                 /    --------        \
+                                /     | gp 19| BLACK   \   瞬時針 右轉
+                               /      --------          \
+                              /      /       \          v
+                             /    -----
+                            /    | p 16 | RED
+                           /     ------
+                          /     /       \
+                            --------
+                            | new 13| RED
+                            --------
+
+                                    |
+                                    |rotato right  + swap p,gp color
+                                    V
+
+                                --------
+                                | p 16 | BLACK
+                                --------
+                               /       \
+                        --------       --------
+                    RED | new 13|      |gp 19 | RED
+                        ---------       -------
+                       /       \
+
+code:
+
+    #接著case4, 因為case4 結束後,  會造成case 5
+
+    # Case 5
+    p = node.parent
+    gp = p.parent
+    #一樣, 檢查一下 new node 是在parent的那一邊
+
+    # 沿用之前的 rotate right, 這次
+    # 要被調整的subtree 延伸到了gp,而gp
+    # 就是這次subtree的root, 因此直接給
+    if node == p.left:
+        self.rotate_right(gp)
+    else:
+        self.rotate_left(gp)
+
+    #swap color
+    p.color = 'black'
+    gp.color = 'red'
+
+
+
+
+#
