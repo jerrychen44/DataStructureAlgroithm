@@ -1,0 +1,48 @@
+
+
+Bubble
+    假設 array 有 n個元素
+    雙迴圈
+        loop1:i 需要擺對 n 個元素, 沒run 一個i, 代表array 從後面數過來i 個已經排好了, 只要跑道 size-1, 因為 j 會跟 j+1比
+            loop2: 每個i 要重新對整個 array j=0~size-1, 沿路value 比較, 比右邊大就交換, 最多也是到 size-1, 因為, j跟j+1
+                    (雖然 j 可以改成 0~size-i, 因為run 過i個,表示array最後i個不用再比較 => 但是仍然是 O(n^2), 沒差多少 )
+
+                    #如果右邊比較大, 就跟小的交換, 換言之右邊最後會是最小, 所以會sorted 成一組有大到小的arr
+                    if arr[j] < arr[j+1]:
+                        swap(arr[j],arr[j+1])
+
+    Time :
+            (n-1)*(n-1) = n^2 - 2n -1 = O(n^2), 這個是假設 j 也是由 0~size-1
+
+            那如果 j 是用比較省的方法跑, 也就是隨著i, j不用每次都跑到size-1, 而是 size-1-i 呢？
+
+            (1+2+3+.....+n-1) = (?) = (n-1)*n/2   = 還是 O(n^2)
+
+            ? 是多少
+                先看一下一般 1+2+3+…+n = n*(n+1)/2
+                現在 n = n-1, 因此等於  (n-1)*n/2 = 上面的 ?
+
+
+
+
+    Space:
+            O(1) : in place
+
+
+#簡單沒懸念
+wakeup_times = [16,49,3,12,56,49,55,22,13,46,19,55,46,13,25,56,9,48,45]
+def bubble_sort_1(l):
+    lsize = len(l)
+    for i in range(lsize-1):
+        for j in range(0,lsize-1-i):
+
+            if l[j] > l[j+1]:
+                tmp = l[j+1]
+                l[j+1] = l[j]
+                l[j] = tmp
+
+
+    print(l)
+
+bubble_sort_1(wakeup_times)
+=>[3, 9, 12, 13, 13, 16, 19, 22, 25, 45, 46, 46, 48, 49, 49, 55, 55, 56, 56]
