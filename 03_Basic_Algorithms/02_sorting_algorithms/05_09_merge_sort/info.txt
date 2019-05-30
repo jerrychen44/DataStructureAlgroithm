@@ -1,0 +1,47 @@
+Merge Sort: Divide and Conquer
+    1.把整個array 分成一個一個
+    2.兩兩一組比較, swap (持續直到回到一個大array)
+
+
+假設 array size = n
+Time complexity:
+    O(每輪會比較的次數 x 幾輪 )
+    = O( 輪所有小區塊需要比較的次數總和 = n (你不可能比較超過n次) x 有幾輪
+    = O( n x 因為是每次兩兩組合比較, 因此其實跟binary search 的高度一樣, 只是BS 是把array兩兩拆開)
+    = O( n x 幾輪就是從一個個elelment 往上組成array 的高度)
+    = O( n x h)
+    = O( n x logn)
+
+Space : O(n) 每輪會copy出來比較data, 但會刪除, 下輪再重新copy, 因此最多就是 O(n)
+
+
+
+Code: Recursion version
+
+架構：
+    1.base case 就是一個item時, 直接return, 已經排好了
+    2.Divide Section 拆成左右兩半, 再 recursive call MergeSort()
+    3.Merge 起來, 因為這個在recursive call 後面, 可以預料是從最底層merge 上來
+
+
+def mergesort(items):
+    # Base case, a list of 0 or 1 items is already sorted
+    if len(items) <= 1:
+        return items
+
+    # Otherwise, find the midpoint and split the list
+    mid = len(arr)//2
+    leftarr = arr[:mid]
+    righarr = arr[mid:]
+
+    # Call mergesort recursively with the left and right half
+    left = mergesort(left)
+    right = mergesort(right)
+
+    # Merge our two halves and return
+    return merge(left, right)
+
+
+詳細
+07_merge_sort_waklthrough 有直接分左右array 的版本
+08_Counting inversion 有用像binary search 一直傳total arry 與 low ,hig idx 的版本
