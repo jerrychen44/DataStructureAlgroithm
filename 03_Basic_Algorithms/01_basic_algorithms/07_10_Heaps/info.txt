@@ -3,7 +3,7 @@
 Data structure: Heap
 必須滿足
     1. complete binary tree (CBT)
-    2. Heap Order Property (加上自訂的 priority 設定, ex: min-Heap,  就是 parent 一定 < child_
+    2. Heap Order Property (加上自訂的 priority 設定, ex: min-Heap,  就是 parent 一定 < child)
 
 
 
