@@ -1,0 +1,229 @@
+##############################
+QuickSort: 也是divide & conquer
+##############################
+
+    核心概念就是: 每輪A(step1+step2)可以決定此pivot 的正確位置,左邊比pivot小, 右邊比pivot大
+    Steps:
+        A:sort 好一個pivot
+            A1.選最右邊ele當 pivot -> divide (左, 右邊現在沒有)
+            A2.從最左邊比較起, (i從左邊往中間走, j 從右邊往中間走, 交叉就停,切左右邊)
+              left_idx == pivot_index 時  stop
+                兩個case, a動 i->, b動 j <-
+                a.value i <= pivot j value 的正常, i往右移
+                b.value i > pivot value 的 => 3 nodes順時鐘swap
+                #三個node 往左順時鐘依序交換, 當然做完 pivot_index -- 左移
+                # ex: cur_val -> x -> x -> x...-> left_pivot_val -> pivot_value
+                # 變成 left_pivot_val -> x -> x -> x...-> pivot_value -> cur_val
+
+        B.把 stop後的左/右 半邊重新丟回 A. (recursive call) -> divide again
+
+
+
+**關鍵在 3nodes 順時針swap
+
+
+
+
+####################
+Complexity 比較複雜
+###################
+
+    Worst case: O(n^2)
+
+        假設 array size = n, index left = 0, right = n-1
+        是當最右邊的pivot = arr[n-1],一開始就在最對的位置, 則他 left index 從左邊一路比較過來都不會換, =>比了 n-1次
+                而pivot arr[n-2] 也是在對的位置...., 他這輪的 left index 比了 n-2次
+                    .....
+                當pivot arr[1] 也一開始就對, 這輪 left index 比了一次
+        其實這就跟 bublle sort 一樣,  1+2+3+....n-1 = (n-1)(n)/2 = O(n^2) = O(n^2)
+
+    Avg case: O(nlogn)
+
+        比較好的 case 就是每次pivot 都差不多可以從右邊移到中間, 把array分割左右平均,
+        然後每輪的recursive 都差不多可以讓povit 停在中間,
+
+        每次砍一半, 就代表有一個pivot 經過 最多 n次比較後,  位置停在中間
+        那要砍多少次一半, 才能排完所有 元素呢？ 也就是每個元素都當過pivot 呢？
+        就跟 merget sort 一樣
+
+        O(最多比較次數 n x 比幾次 h 高度 ) = O(nxlogn)
+
+    Tips:
+        可以改選最右邊幾個數 "中間的" 那個當pivot, 比較容易造成 比較後 pivot 切在中間
+
+
+    Space complexity = O(1), in-place solution
+
+
+########
+Code:
+########
+
+假設 input  = [8, 3, 1, 7, 0, 10, 2]
+
+    1. 先inital pivot 是最右邊element, 且取得index, 因為要in-place 需要知道idx
+
+        pivot_index = len(items) - 1
+        pivot_value = items[pivot_index]
+
+
+    2. 三nodes 順時鐘
+        #三個node 往左順時鐘依序交換, 當然做完 pivot_index -- 左移
+        # ex: cur_val -> x -> x -> x...-> left_pivot_val -> pivot_value
+        # 變成 left_pivot_val -> x -> x -> x...-> pivot_value -> cur_val
+
+        ps. left_dx == pivot_index 時  stop
+
+        ex:
+        left_idx = 0
+
+        while left_idx != pivot_index:
+
+            cur_val = items[left_idx]
+
+            #case b.
+            if pivot_value >= cur_val:
+                left_idx +=1
+            else:
+            #case a.
+                #三個node 往左順時鐘依序交換, 當然做完 pivot_index -- 左移
+                # ex: cur_val -> x -> x -> x...-> left_pivot_val -> pivot_value
+                # 變成 left_pivot_val -> x -> x -> x...-> pivot_value -> cur_val
+
+                left_pivot_val = items[pivot_index-1]
+
+                #順時針swap
+                items[left_idx] = left_pivot_val
+                items[pivot_index-1] = pivot_value
+                items[pivot_index] = cur_val
+                pivot_index -=1
+
+
+
+上面step1,2 就是做好一輪了, 處理好一個pivot 在它正確的位置
+
+把這兩部做成一個helper fun, 讓其他還沒做好的位置來呼叫
+
+
+def sorted_one_pivot_step(items):
+
+    #step1
+    pivot_index = len(items) - 1
+    pivot_value = items[pivot_index]
+
+    #step2
+    left_idx = 0
+
+    while left_idx != pivot_index:
+
+        cur_val = items[left_idx]
+
+            #case b.
+        if pivot_value >= cur_val:
+            left_idx +=1
+        else:
+            #case a.
+            #三個node 往左順時鐘依序交換, 當然做完 pivot_index -- 左移
+            # ex: cur_val -> x -> x -> x...-> left_pivot_val -> pivot_value
+            # 變成 left_pivot_val -> x -> x -> x...-> pivot_value -> cur_val
+
+            left_pivot_val = items[pivot_index-1]
+
+            #順時針swap
+            items[left_idx] = left_pivot_val
+            items[pivot_index-1] = pivot_value
+            items[pivot_index] = cur_val
+            pivot_index -=1
+
+
+
+接著, 由於sorted_one_pivot_step(items) 需要被recursive call,
+因此需要接受 low, hig index , 稍微改一下, 讓
+    left_idx = low
+    pivot_idx = hig
+且, return pivot_idx, 要讓別人之後知道pivot在哪裡, 才分的了左右
+以前binary search mid 是用算的, 這次 mid = pivot_idx
+
+
+
+
+def sorted_one_pivot_step(items,low,hig):
+
+    #step1
+    #pivot_index = len(items) - 1
+    pivot_index = hig
+
+    pivot_value = items[pivot_index]
+
+    #step2
+    #left_idx = 0
+    left_idx = low
+
+    while left_idx != pivot_index:
+
+        cur_val = items[left_idx]
+
+            #case b.
+        if pivot_value >= cur_val:
+            left_idx +=1
+        else:
+            #case a.
+            #三個node 往左順時鐘依序交換, 當然做完 pivot_index -- 左移
+            # ex: cur_val -> x -> x -> x...-> left_pivot_val -> pivot_value
+            # 變成 left_pivot_val -> x -> x -> x...-> pivot_value -> cur_val
+
+            left_pivot_val = items[pivot_index-1]
+
+            #順時針swap
+            items[left_idx] = left_pivot_val
+            items[pivot_index-1] = pivot_value
+            items[pivot_index] = cur_val
+            pivot_index -=1
+
+
+    return pivot_index
+
+OK, 所以上面已經把 大架構的 A. 做好了, 接下來配合 B. recursive call A
+
+
+
+#my ver
+
+def sort_all(items,low,hig):
+
+    #base case
+    if low>hig:
+        return
+
+
+    #回到最一開始的架構, 兩步
+    #A:sort 好一個pivot, 得到的 pivot_idx 就是以前的 mid  = (l+h)//2
+    mid = sorted_one_pivot_step(items,low,hig)
+
+    #B.把 stop後的左/右 半邊重 recursive call -> divide again
+    sort_all(items,low,mid-1)
+    sort_all(items,mid+1,hig)
+
+    #都是 in-place sort, 不用return 什麼
+
+def quicksort(items):
+
+    sort_all(items,0,len(items)-1)
+
+    #都是 in-place sort, 不用return 什麼
+
+
+
+
+
+
+
+
+items = [8, 3, 1, 7, 0, 10, 2]
+quicksort(items)
+print(items)
+
+==> [0, 1, 2, 3, 7, 8, 10]
+
+Done.
+#
