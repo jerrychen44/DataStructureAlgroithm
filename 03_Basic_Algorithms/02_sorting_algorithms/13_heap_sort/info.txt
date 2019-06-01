@@ -15,3 +15,9 @@ The main steps in a heapsort are:
 
 2.Swap the top element with the last element in the array (putting it in it's correct final position)
 3.Repeat with arr[:len(arr)-1] (all but the sorted elements)
+
+
+
+其實不用重寫一個 heap.insert remove , 雖然這樣可以
+
+只要寫一個 downheapfiy , 然後想要移動的人就去call downheapfiy, 移一次如果不夠, 裡面要再recursive call 下去
