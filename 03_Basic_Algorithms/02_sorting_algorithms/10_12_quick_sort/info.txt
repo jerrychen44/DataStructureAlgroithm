@@ -19,7 +19,7 @@ QuickSort: 也是divide & conquer
 
 
 
-**關鍵在 3nodes 順時針swap
+        **關鍵在 3nodes 順時針swap
 
 
 

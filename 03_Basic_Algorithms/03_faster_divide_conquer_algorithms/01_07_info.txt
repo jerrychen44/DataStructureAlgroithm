@@ -1,0 +1,430 @@
+
+=====================
+01 Divide and conquer
+=====================
+
+In this section, we'll discuss algorithms that use a strategy called divide and
+conquer to solve problems more efficiently.
+
+=>Divide & conquer 是一個解題的策略
+
+
+The name comes from the idea that
+the algorithm will break (or divide) the problem down into sub-problems
+that can be more easily solved (or conquered).
+
+=>將問題切成小問題->Divide, 然後這些小問題更容易被解決 (conquered)
+
+
+Then, the solutions to these sub-problems are combined to yield an answer to the original problem.
+
+
+所以基本上我們之前那些
+
+recursive 就是 一種 divide and conquer 策略下的產物
+(嚴格說起來, 只要有這種概念的解法,都算, 即使用的是iteration)
+
+
+
+
+=====================
+02 Median Problem
+** median 在第 n_th位置, value x, 這個 x 也是這個array 第 n_th 小的數
+=====================
+
+
+//part1 : 問題定義
+
+這是一個在一個 n elements UNsorted 1D array A 中找到 median 數的問題
+median = 位置在 array 的 celling (n/2)
+
+
+    ex: 假設這個array size = n = 10
+    median 在 n/2 = 5
+
+    A=[3,27,6,9,4,1,34,12,78,33]
+
+    如果你先sort
+
+    A=[1,3,4,6,"9",12,27,33,34,78] -> "9"就是中數
+
+    同時 9 這個值, 也是第 5 小的數,
+
+    因此, 中數在 n_th 位置, 也隱含了這個數字在A中是第 n_th 小
+    以這個例子, 中數在A的 5_th, 是value 9, 其實 9就是在A 中第 5 小的數字
+
+//part2 :更general 來看
+
+原本問題:
+這是一個在一個 n elements UNsorted 1D array A 中找到 median 數的問題
+median = 位置在 array 的 celling (n/2)
+
+可以更廣泛來看
+給一個 n element Unsorted 1d array A, 跟一個 位置k (1<= k <= n),
+在A中找到 第 k 小的數
+** 原本題目就是當  k = celling(n/2)時, 會得到 median數
+
+
+    直觀的來看, 假設我們先sorted 過 A
+
+    A=[3,27,6,9,4,1,34,12,78,33]
+
+    如果你先sort
+
+    A=[1,3,4,6,9,12,27,33,34,78]
+
+    要得到第 k smallest 的數, 直接 return value 即可 A[k-1],
+
+    但先前的sort 基本上要經過 O(nlogn)
+
+
+    => 有沒有可能找到 median 數不要經過 sorted ?
+    => 想要找到 median 只要 O(n) time algorithm (B,F,P,R,T in 1973 提出)
+
+
+
+
+
+=====================
+03 basic approach
+=====================
+
+主要的算法利用 Quick Sort Style 為主體去做, 先複習一下quick sort
+
+貼上當時的note:
+    核心概念就是: 每輪A(step1+step2)可以決定此pivot 的正確位置,左邊比pivot小, 右邊比pivot大
+    Steps:
+        A:sort 好一個pivot
+            A1.選最右邊ele當 pivot -> divide (左, 右邊現在沒有)
+            A2.從最左邊比較起, (i從左邊往中間走, j 從右邊往中間走, 交叉就停,切左右邊)
+              left_idx == pivot_index 時  stop
+                兩個case, a動 i->, b動 j <-
+                a.value i <= pivot j value 的正常, i往右移
+                b.value i > pivot value 的 => 3 nodes順時鐘swap
+                #三個node 往左順時鐘依序交換, 當然做完 pivot_index -- 左移
+                # ex: cur_val -> x -> x -> x...-> left_pivot_val -> pivot_value
+                # 變成 left_pivot_val -> x -> x -> x...-> pivot_value -> cur_val
+
+        B.把 stop後的左/右 半邊重新丟回 A. (recursive call) -> divide again
+
+
+
+        **關鍵在 3nodes 順時針swap
+
+
+
+重新整理一下:
+Unsorted array A
+Quick Sort:
+    A1. 挑選 pivot P, 之前都是挑最右邊的直接當pivot,
+    A2. 之後 三nodes 順時針旋轉 (cur_node, pre_pivot, pivot), A 到對的停下來後,
+        已經把 A 分成三個部分,  A<p, A=p, A >p,
+    B.  把 A<p, A>p 再recursive call
+
+
+=> 整個效能最關鍵的影響是, 你選到的 pivot P, 如果你選到的 P 是最大 或是最小這種極值,
+   在A2, 會要移動 n => Worst case O(nxn) = O(n^2)
+=> 因此好的 pivot 就是你拿 median 數當 pivot, 這樣 pivot 幾乎停在中間, Avg O(nxlogn)
+
+即便 Quicksort 已經選到 median 的 pivot , avg cost still O(nlogn)
+
+我們想要 O(n) 該怎辦？
+
+
+關鍵在於
+    ***
+        StepB, 我們不需要 recursive A<p "和" A>p 一起,
+        我們只要 recursive 其中一個即可
+
+(當然原本的 quick sort 是要, 別忘了題目現在是找到 k smallest element, 所以才會有這個可簡略的stepB加速)
+
+
+=====================
+04 Search Example
+=====================
+
+A = [5,2,20,17,11,13,8,9,11]
+假設選了最右邊 pivot = 11
+
+現在要分出 A<p, A=p, A>p
+
+掃過一次後分別是
+
+A<p : [5,2,8,9], A=p:[11,11], A>p:[20,17,13]
+
+OK, 那 我們想找的第 K smallest 數, 會在哪裡呢？
+依照我們 K的要求, 當然一定會落在上面這三的籃子裡面
+所以, 第 K smallest 會跟這三個籃子的size 有關, 簡單說先看看想求的第k小數, 是落在哪個籃子
+recursive 單獨那個籃子即可
+
+譬如,
+1.如果你要找第 k=5 小的數, 因為 A<p 只有 4個元素, 因此,
+  第5小的數, 會落在 A=p, 第六小的也是,
+2.第 7小的 因為已經超過 len(A<p)=4 + len(A=p)=2 = 6 個數, 所以第 7小的數字一定落在
+A>p 裡面
+
+
+
+summary:
+
+    if k <= 4, 那想找的 k smallest num 在 A<p 裡面
+    if 5< k <=6, 那 k smallest num 直接輸出 11 (不用做什麼recursive, 因為 A=p這籃裡面都是同一個數字, O(1) return)
+    if k > 6, 那 k smallest 一定落在 A>p 這籃子.
+        (實作小tip: 在 recursive call A>p 時, 就會在 A>p 中變成找 k-len(A<p) smallest, 也就是找 k-6 th smallest 數)
+
+
+所以跟quick sort 不同的是, 因為我們只要找 k smallest, 只需要recursive call A<p or A>p 其中一個,
+而quick sort 是要整個array sorted, 所以只好都做
+
+
+
+=====================
+05 D & C : High level view
+=====================
+
+反過來想 or 由目標往回理解題目
+
+
+    /////////////////////////////////////////
+    //再複習一下 quick sort 的 time complexity
+    // HELP:https://www.youtube.com/watch?v=3Bbm3Prd5Fo
+    /////////////////////////////////////////
+    一樣, arrary A size is n
+
+
+    WORST CASE: O(n^2)
+        worst case 就是遇到 pivot 每次都選到最大值 or 最小值, 所以
+        每次pivot 都會從最右邊,  移動到最左邊 (比較 n 次), 總共有 n個數要比較 -> O(n)
+        也每次都只完成一個pivot 位置, 因此下一輪只-1 --> T(n-1)
+
+
+               T(n) = O(n) + T(n-1)
+
+            帶一下
+                T(n) = T(n-1) + O(n)
+                T(n-1) = T(n-2) + O(n-1)
+                T(n-2) = T(n-3) + O(n-2)
+                T(n-3) = T(n-4) + O(n-3)
+                ....
+                T(1) = k0
+
+
+            全部帶進去,左邊只剩下 T(n)
+
+                T(n) = T(n-1) + O(n)
+                     = {T(n-2) + O(n-1) }   + O(n)
+                整裡
+                    = T(n-2) +  O(2n-1)
+                再帶入
+                    = {T(n-3) + O(n-2)}   +  O(2n-1)
+                整理
+                    = T(n-3)  +  O(3n-3)
+                再帶入 T(n-3)
+                    = T(n-4) + O(4n - 6)
+
+                    .....
+                如果是 k step
+                    = T(n-k) + O(kn) - (1+2+3+4...+k-1)
+                    = T(n-k) + O(kn) - (k)(k-1)/2
+
+            利用已知, k是 step數, n走了k步來到 1, 變成常數
+            所以, k , n 的關係可以寫成下面
+            n - k = 1, k= n - 1
+
+            再帶入剛才整理好了 step k
+                T(n) = T(n-k) + O(kn) - (k)(k-1)/2
+                     = T(1) + O( (n-1)*n )   - (n-1)(n-2)/2
+                     = k0 + O(n^2-n) - O(n^2)
+                    = O(n^2)
+
+
+
+
+        **quick sort worst case = O(n^2)
+
+
+    BEAT CASE: O(nlogn)
+        在pivot 如果能選得好之下, 每輪 pivot 可以把array 分成接近 n/2 之下, -> 左邊比較了 O(n/2) + 右邊那邊比較了 O(n/2) = O(n),
+        左右都 n/2 再去call recursive -> 2*T(n/2), 兩倍是因為左右都要放下去recursive
+
+        T(n) = O(n) + 2*T(n/2)
+
+        帶一下
+            T(n) =   2*T(n/2)  + O(n)      .....1
+            T(n/2) = 2*T(n/4)  + O(n/2)  .....2
+            T(n/4) = 2*T(n/8) + O(n/4)   .....3
+            ......
+            T(1)  =  constant1 = c1 (當 array 只有一個元素, 不用sort)
+
+
+            全部帶進去, 讓左邊只剩下 T(n), 看前1,2,3抓個感覺
+            =>
+            T(n) = 2 {  T(n/2) 帶入 } + O(n)
+                 = 2 { 2*T(n/4)  + O(n/2) } + O(n)
+            整理, 且把 O(n/2) 視為 O(n) 同量級的
+                = 4 * T(n/4)  + 2* O(n)
+            再把 T(n/4) 帶入
+                = 4 *{ 2*T(n/8) + O(n/4) } + 2*O(n)
+            整理
+                = 8 * T(n/8) + 3*O(n)
+
+                ......
+
+            *** 可推出 T(n) 在 第 k 輪的關係
+
+
+                T(n) = 2^k * T(n/2^k) + k*O(n),  k 等於recursive 處理的次數
+
+
+          又, 我們知道第 k 輪 也就是最後一輪會是  T(1), 只是我們不知道要走 k 輪
+          也就是 T(n/2^k) = T(1), 時, 要知道 k是多少
+          因此可以假設
+                n/2^k = 1, 移項取log,  k = logn, 帶回 T(n)
+
+                T(n) = 2^logn * T(1) + logn*O(n),   (2^logn = n, 又 T(1) = c1,)
+                     =  n * c1 + logn*O(n)
+                     這邊 n*c1 < logn*O(n) 可忽略
+
+                    所以只剩後面這項
+
+                T(n) = O(nlogn)
+
+
+
+
+回到我們找 medina 的問題
+目標: O(n) running time
+
+    依照剛才的summary
+    T(n) = T(n/2) + O(n),
+    note:
+    T(n/2) 是每次recursive A<p or A>p 其中一個,
+    O(n)是當輪 array需要分類所以都要touch n 個
+
+    重頭迭代來看看
+    T(n) = T(n/2) + O(n)
+    T(n/2) = T(n/4) + O(n/2)
+    T(n/4) = T(n/8) + O(n/4)
+    ....
+    T(1) = k0
+
+    好, 一樣, 有了每一項之後, 帶進去造成 T(n)
+    T(n) = T(n/2) + O(n)
+    帶入  = { T(n/4) +  O(n/2)}   + O(n)
+    整理  = T(n/4) + O(n/2) + O(n)
+    帶    = { T(n/8) + O(n/4) } + O(n/2) + O(n)
+         =T(n/8) + O(n/4) + O(n/2) + O(n)
+        .....
+        = T(n/2^h) + O(n/2^(h-1) +....+n/2 + n)
+    已知
+
+    n/2^h = 1, n=2^h, h =logn
+        因此 再把h帶入 T(n)
+
+    T(n) = T(n/2^h) + O(n/2^(h-1) +....+n/2 + n)
+         = T(1) + O(n)*O( 1/ 2^(h-1) + ...+ 1/2+ 1)
+         = T(1) + O(n)*O(1)
+         = O(n)
+
+
+=> 但要能達成 T(n/2) 每次帶 n/2 , 需要選到 pivot = median, 所以關鍵是變成
+找到 median 當作 p, 則這個 T(n) = O(n) 才會成立
+
+***
+所以整個找 k smallest 要能 或是說找整個 list median 要能解在 O(n)
+關鍵還是在於, 每輪 pivot 也要能選到 media
+
+
+但我們怎麼每次都能選到 pivot 是 median 呢？   不能, 但我可以選到很逼近的 median
+
+叫做 Approximate median:
+    假設一個 sortED 的 array A:  [, , ,| , , ,| , , ,|, , , ]
+
+    切成四份
+        A:  [ , , | , , , | , , , | , , , ]
+                n/4     2n/4   3n/4
+                       =median
+
+    我雖然給不出真正的 median 數字, 但是我可以保證給你數字介於   n/4~3n/4 之間的數字, 這也很靠近 median 了
+    給出中間區塊代替真實 median 當作 pivot
+
+
+    再回到 T(n), 原本是
+        T(n) = T(n/2) + O(n)
+
+    現在 worst case 就是拿到了最右邊的 3n/4的 value P, 然後 A 左邊的數都 < P, 切3n/4 到下一輪
+                    反之, 拿到最左邊 n/4 位置的 value P, 然後 P A右邊 都 > P, 因此 也切p 右邊 3n/4 去下一輪
+        因此
+            T(n) = T(3n/4) + O(n)
+
+        現在來看這個
+
+            基本上 跟原本只差在 T(n/2) -> T(3n/4) 只差在常數, 仍然是 O(n)
+
+
+
+            T(n) = T(n*3/4) + O(n)
+            T(3n/4) = T(n*9/16) + O(n*3/4)
+            T(n9/16) = T(n*27/64) + O(n*9/16)
+                .....
+            T(1) = k0
+
+            帶成 T(n)= T(n*3/4) + O(n)
+                    = { T(n*9/16) + O(n*3/4) } + O(n)
+                    = T(n*9/16) + O(n*3/4) + O(n)
+                    = { T(n*27/64) + O(n*9/16) } + O(n*3/4) + O(n)
+                    = T(n*27/64) + O(n*9/16)+ O(n*3/4) + O(n)
+                    ''''
+                    = T(n* 3^h/4^h ) + O(n)*O( 3^h/4^h + ....+ 3^2/4^2 + 3/4 + 1)
+            又
+                n * (3/4)^h = 1,
+                    = T(1 ) + O(n)*O( 常數 ) --> 這裡面 3/4 小於1, 右邊可以當作常數 ????
+                    = O(n)
+
+
+
+
+
+
+還有:
+=>  其實區間可以取 從  n/100 ~ 99n/100 主要是要 < 1
+
+        A:  [.|,. ...., , | , , , | , , , | , , ,......|.. ]
+            n/100        n/4     2n/4   3n/4         99n/100
+                               =median
+
+        只要 T(n) = T( <1 *n ) + O(n)
+                都會 = O(n)
+        ex: 假設用 99n/100
+            T(n) = T(0.99 * n) + O(n) => O(n)
+
+
+            重點是需要一個持續 < 1的數 a
+            T(n) = T(a * n ) + O(n)
+                這樣都會是 = O(n)
+
+
+        => 理論上要在  n/4 ~ 3n/4 是個好 pivot,
+            但是實際上, 代碼會給到 n/100~ 99n/100 都有可能, 但是無損 O(n)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
