@@ -27,6 +27,7 @@ recursive 就是 一種 divide and conquer 策略下的產物
 
 
 
+
 =====================
 02 Median Problem
 ** median 在第 n_th位置, value x, 這個 x 也是這個array 第 n_th 小的數
@@ -249,6 +250,7 @@ summary:
 
         T(n) = O(n) + 2*T(n/2)
 
+        參考: https://www.youtube.com/watch?v=1K9ebQJosvo
         帶一下
             T(n) =   2*T(n/2)  + O(n)      .....1
             T(n/2) = 2*T(n/4)  + O(n/2)  .....2
@@ -302,6 +304,7 @@ summary:
     O(n)是當輪 array需要分類所以都要touch n 個
 
     重頭迭代來看看
+    可參考 :https://www.youtube.com/watch?v=XcZw01FuH18
     T(n) = T(n/2) + O(n)
     T(n/2) = T(n/4) + O(n/2)
     T(n/4) = T(n/8) + O(n/4)
@@ -323,6 +326,10 @@ summary:
 
     T(n) = T(n/2^h) + O(n/2^(h-1) +....+n/2 + n)
          = T(1) + O(n)*O( 1/ 2^(h-1) + ...+ 1/2+ 1)
+         = T(1) + O(n)*O(他就是  sigma(i=0~h-1 , 的 1/2^i)   )), 而這個 sigma(i=0~h-1 , 的 1/2^i) 就想像是一個圓, 切了1/2 +另外一半再切 1/4, 剩下的再切 1/8... 無限大,全部加起來, 不會超過= 1
+                            reference : https://zh.wikipedia.org/wiki/1/2_%2B_1/4_%2B_1/8_%2B_1/16_%2B_%E2%80%A6, 1/2 + 1/4 + 1/8 + 1/16 + …...= (1/2)/(1-(+1/2)) = 1
+                                        這是一個從 1/2 開始公共比為 1/2 的幾何級數，從而它們的和是 1,
+         = T(1) + O(n)*O(即便 i 從 0~ 無限大, 這個sum也只是趨近於1))
          = T(1) + O(n)*O(1)
          = O(n)
 
@@ -352,8 +359,8 @@ summary:
     再回到 T(n), 原本是
         T(n) = T(n/2) + O(n)
 
-    現在 worst case 就是拿到了最右邊的 3n/4的 value P, 然後 A 左邊的數都 < P, 切3n/4 到下一輪
-                    反之, 拿到最左邊 n/4 位置的 value P, 然後 P A右邊 都 > P, 因此 也切p 右邊 3n/4 去下一輪
+    現在 worst case 就是拿到了最右邊的 3n/4的 value P, 然後 A 左邊的數都 < P, 因為A sorted, 切A[0:3n/4] 到下一輪
+                    反之, 拿到最左邊 n/4 位置的 value P, 然後 P A右邊 [n/4:]都 > P, 因此 也切p 右邊 3n/4 去下一輪
         因此
             T(n) = T(3n/4) + O(n)
 
@@ -378,10 +385,19 @@ summary:
                     = T(n* 3^h/4^h ) + O(n)*O( 3^h/4^h + ....+ 3^2/4^2 + 3/4 + 1)
             又
                 n * (3/4)^h = 1,
-                    = T(1 ) + O(n)*O( 常數 ) --> 這裡面 3/4 小於1, 右邊可以當作常數 ????
+                    = T(1 ) + O(n)*O(  裡面是一個  sigma(i=0~h,(3/4)^h)), 剛之前一樣, 這個如果就算 h從 0~無限大, 加起來也只是逼近 1
+                    =
+                    = O(n) * O(~1)
                     = O(n)
 
 
+**
+    因為不論是 T(n*1/2) or T(n*3/4) or T(n*99/100) 那個係數都是 < 1, 因此滿足一個圓越切越小的sum ,最多逼近於 1
+    因此, 會只剩下前項 O(n), 但如果這個係數 >1 了, 那可就會超過1, 就不能當1來看了
+
+    逼近1的部分可參考: https://zh.wikipedia.org/wiki/%E7%AD%89%E6%AF%94%E6%95%B0%E5%88%97
+
+    當-1<q<1時，等比數列無限項之和 : Sum = a1/(1-q) = 3/4/(1/4) = 3
 
 
 
@@ -389,7 +405,9 @@ summary:
 還有:
 =>  其實區間可以取 從  n/100 ~ 99n/100 主要是要 < 1
 
-        A:  [.|,. ...., , | , , , | , , , | , , ,......|.. ]
+
+
+ Sorted A:  [.|,. ...., , | , , , | , , , | , , ,......|.. ]
             n/100        n/4     2n/4   3n/4         99n/100
                                =median
 
@@ -413,18 +431,143 @@ summary:
 
 
 
+=====================
+06 D & C : Recursive pivot
+=====================
+
+看更細一些, 再一次, 我們的目標是
+    => find a good pivot in O(n)
+    => T(n) = T(3/4*n) + O(n), 還記得嗎？ O(n)需要把pivot 放對位置所需要的比較
+
+接著, 我們加入一個 slack = T(0.24*n) ~ = T(1/5*n), 因為之前說過, 其實 99/100 之前都是可以造成
+T(n) = O(n), 我們只用了 3/4 ~ 0.75, 還有一些空間可以用, 0.99-0.75 = 0.24, 所以可以
+多一個 T(0.24*n) 的空間可以利用, 來幫忙找出好的pivot
+
+    原式變成
+    => T(n) = T(3/4*n) + [ T(1/5*n) + O(n)],
+
+        中括號裡面的  T(1/5*n) + O(n) 時間是拿來找 好 pivot 所需要的所有時間
+        其中, T(1/5*n) 是找到一個好 pivot 所需要時間, O(n)需要把pivot 放對位置所需要的比較
+
+        對照上面的 常數 < 1 要求, 3/4 + 1/5 = 0.75 + 0.2 = 0.95 < 1, 所以
+    => T(n) 還是 = O(n)
+
+
+
+那我們要怎麼利用這多出來的 T(1/5*n) 運算量, 來幫忙找到好的 P 呢？
+
+=> 在A 中選一個 subset S , 這個S size = n/5,
+    然後
+    在這個 subset S 中找到 median , 給出來當作整個 A 的 pivot
+
+    => p= Mediam( S )
+
+
+=> 那接下來的問題是, 你要從A中選出哪些 element 當作 S, 這些element 要能代表 A
+    , 這樣, 在 S 中找 median 來代表 P 才會準
+
+=>作法
+    1.把 unsorted A, 分成 celling(n/5) 堆, 每堆自己sorted 找一個media 代表,
+        ps1,取celling 是因為 n 可能 < 5,
+        ps2.怎麼分堆都可以, 最簡單就是照著index 每 5 個分一堆, 自然有 n/5 堆
+    2.這些代表,也就是 n/5個數, 再sorted, 並挑出 median
+
+ex: size = 33, 因此先分成 celling(33/5) = celling(6.6)= 7 堆, 每堆自己sorted 後挑出自己的median
+    m1,m2,m3,m4,m5,m6,m7  這個 set 再 sorted 後, 取 median 代表整個 A
+
+
+=====================
+07 pseducode
+=====================
+ok, 回到一開始的問題, 在 O(n) 之下, 從A中找出第 k 小的數 (也就是能在A中找到 median)
+
+
+fun: FastSelect():
+input:
+    1.Unsorted array A, size n
+    2.integer k, where  1<= k <= n
+
+output:
+    kth smallest number of A
+
+
+
+Code:
+FastSelect(A, k):
+
+    1.Break A in to celling(n/5) groups
+        => G1,G2,G3....G(celling(n/5))
+    2.找出每個Group 的 media
+        for i=0 ~ n/5 :
+            sort Gi: 只有5個數, 什麼算法sort都差不多, O(1)
+            mi = median (Gi)
+
+    3. 得到所有Group 的 median => S = {m1,m2,...m n/5}
+    4. 找 S 的 median 且 assign = p, 可以再recursive 一次 FastSelect(),
+            這時候 input array 就是 S, 想找 median 就是 S size 的一半, 因此  k= n/5 * 1/2
+            =>  p = FastSelect(S,n/10):
+    5. 終於得到這個靠近 median 的 pivot 了, 也就是討論半天的加速關鍵
+        這時候回到原來, 分出 A<p, A=p, A>p
+
+    (1.~5. 現在都還是第一層call, 跟quicksort 接下來, 我們只recursive call A<p or A>p 單邊,
+            與 quicksort 不同, quicksort是 A<p A>p 都call, 因為他要整個sorted 好)
+
+    6. Recursive on A<p 或 A>p 或 A=p 的畫質些 return p
+
+            if k <= size(A<p):
+                return FastSelect(A<p, k)
+            elif k > size(A<p) + size(A=p):
+                # k 要配合新 A>p 的index, 只丟右半邊, k 不再是這麼大了
+                return FastSelect(A>p, k - size(A<p) + size(A=p))
+            else: # k == p 的 case,
+                return p
 
 
 
 
+=====================
+08 Time complexity of pseducode
+=====================
+
+    假設我們宣稱 p = 好的 pivot 之下, 來看一下剛才的 code
+
+Code:
+FastSelect(A, k):
+
+    1.Break A in to celling(n/5) groups ...........................> O(n) 肯定要 loop過所有item才能分堆
+        => G1,G2,G3....G(celling(n/5))
+    2.找出每個Group 的 media              ............................> 每個group sorting O(1) 因為 固定 5個數, n個 group = O(n)
+        for i=0 ~ n/5 :
+            sort Gi: 只有5個數, 什麼算法sort都差不多, O(1)
+            mi = median (Gi)
+
+    3. 得到所有Group 的 median => S = {m1,m2,...m n/5}
+    4. 找 S 的 median 且 assign = p, 可以再recursive 一次 FastSelect(),
+            這時候 input array 就是 S, 想找 median 就是 S size 的一半, 因此  k= n/5 * 1/2
+            =>  p = FastSelect(S,n/10):      ........................>  因為 S 有 n/5個element, T(n/5)
+    5. 終於得到這個靠近 median 的 pivot 了, 也就是討論半天的加速關鍵
+        這時候回到原來, 分出 A<p, A=p, A>p      ........................> 一樣要 touch all O(n)
+
+    (1.~5. 現在都還是第一層call, 跟quicksort 接下來, 我們只recursive call A<p or A>p 單邊,
+            與 quicksort 不同, quicksort是 A<p A>p 都call, 因為他要整個sorted 好)
+
+    6. Recursive on A<p 或 A>p 或 A=p 的畫質些 return p, ...............> 配合宣稱的 p 是好 pivot
+                                                                        跟之前的分析一樣 : T(3/4*n)
+
+            if k <= size(A<p):
+                return FastSelect(A<p, k)
+            elif k > size(A<p) + size(A=p):
+                # k 要配合新 A>p 的index, 只丟右半邊, k 不再是這麼大了
+                return FastSelect(A>p, k - size(A<p) + size(A=p))
+            else: # k == p 的 case,
+                return p
 
 
+最後加起來
 
-
-
-
-
-
-
+    T(n) = T(3/4*n) + T(n/5) + 3*O(n), step1,2,5 加起來算 3*O(n)
+         關鍵在於 3/4 + 1/5 < 1, 因此
+         = 一直recursive 帶入下去 ,
+         = O(n)
 
 #
