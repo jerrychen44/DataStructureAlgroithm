@@ -68,3 +68,44 @@ size 8
 
 Time complexity 就是比較的次數 O(h+1), 現在想求 h, n=2^h, logn = h,
 帶入 O(logn +1) = O(logn)
+
+
+
+
+
+
+##################
+# Time complexity form T(n) of view
+##################
+    T(n) = T(n/2) + 1,
+        T(n/2) is because we put the half array to next recursive call,
+        1 is for comparison > or <
+
+    Drop 1, and derivate the T(n)
+
+
+    T(n)   = T(n/2) + 1
+    T(n/2) = T(n/4) + 1
+    ....
+    T(1)   = constant K0
+
+
+
+    so,
+
+    T(n) = T(n/2) + 1
+         = {T(n/4) +1 }  + 1 = T(n/4) + 2
+         = {T(n/8) +1 }  + 2 = T(n/8) + 3
+            .....
+         = T(n/2^h) + h
+
+    h is the height of binary tree
+    n/2^h = 1, n=2^h, logn =h
+
+    So,
+
+    T(n) = T(1) + logn
+         = K0 + logn
+         = logn
+
+    ***Thus, T(n) = O(logn)

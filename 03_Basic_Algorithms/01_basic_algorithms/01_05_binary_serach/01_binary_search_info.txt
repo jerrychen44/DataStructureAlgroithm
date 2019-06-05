@@ -1,6 +1,6 @@
 
 In summary:
-    針對一個已經sorted 的物件, 且能分辨得出是 target > or < 
+    針對一個已經sorted 的物件, 且能分辨得出是 target > or <
 
     1.Binary search is a search algorithm where we find the position of a target value
         by comparing the middle value with this target value.

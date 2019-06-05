@@ -1,0 +1,68 @@
+######
+ Idea:
+######
+
+Because of the question wants the sqrt root result with floor value.
+It can change to finding the last number, which its power result less than the target number.
+
+ex:
+    target = 27
+    pow(5,2) = 25   -> 5 is the last number which its power result less than 27.
+    sqrt(27)  = -----> 5.19
+    pow(6,2) = 36   -> 6 is the first number which its power result larger than 27.
+
+    -> We want 5.
+
+
+##########################
+ Time complexity: O(logn)
+##########################
+
+    use the idea from binary searching, put the half of searching area to recursive call.
+    we assume we can find the sqrt root number from 0,1,2,......, target.
+    The detail I write in the code as a comment.
+
+
+    T(n) = T(n/2) + 1,
+        T(n/2) is because we put the half array to next recursive call,
+        1 is for comparison betwee current pow(mid,2) and target.
+
+    Drop 1, and derivate the T(n)
+
+
+    T(n)   = T(n/2) + 1
+    T(n/2) = T(n/4) + 1
+    ....
+    T(1)   = constant K0
+
+
+
+    so,
+
+    T(n) = T(n/2) + 1
+         = {T(n/4) +1 }  + 1 = T(n/4) + 2
+         = {T(n/8) +1 }  + 2 = T(n/8) + 3
+            .....
+         = T(n/2^h) + h
+
+    h is the height of binary tree
+    n/2^h = 1, n=2^h, logn =h
+
+    So,
+
+    T(n) = T(1) + logn
+         = K0 + logn
+         = logn
+
+    ***Thus, T(n) = O(logn)
+
+
+
+##########################
+ Space complexity: O(1)
+##########################
+
+    Just use 3 fix number of local variable for temp usage.
+    (mid, cur_val, next_cur_val)
+
+#
