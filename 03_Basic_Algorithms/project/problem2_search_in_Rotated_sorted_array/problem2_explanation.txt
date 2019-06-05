@@ -1,0 +1,61 @@
+######
+ Idea:
+######
+
+Basically is binary search, but we want to know which part of array we should keep finding our target.
+How do we do to get know the target is inside the left half array or right half array?
+
+For example we want to check the target is inside the left half array, arr[0:mid-1]
+We will use if arr[low] <= target and target < arr[mid].
+    if True, call recursive with arr[start:mid-1]
+    if False, call recursive with arr[mid+1:end]
+
+So, the key is "if arr[low] <= target and target < arr[mid]" should work perfect which means
+the element between low~mid should still keep the sorted property, thus our if condition will
+work.
+
+That is why we need to know where are the sorted series of elements at first beginning, because
+we will use them to distinguish the target number in the left or right hand side of array.
+
+
+
+
+
+Recursive call in Detail:
+
+    # three cases for rotated array
+    # original : [0,1,2,4,5,6,7] ---> rotated [4,5,6,7,0,1,2], mid = 7
+
+    #case0: arr[mid] == target: return mid
+    #
+    #case1: a.real start element at right hand side. ex: [4,5,6,"7",0,1,2], which means the Left hand side of mid is USEABLE.
+    #       b.[low=0:mid-1] still with sorted property,
+    #       c.how can we distinguish this case?
+    #           arr[mid] > arr[low] > arr[hig]
+    #
+        # if we hit in case1:
+        #   Use the serise [low=0:mid-1] to loacte the target value
+        #       if target in [low=0:mid-1], then recursive call the arr[low:mid-1]
+        #               else: recursive call the arr[mid-1:hig]
+
+    #case2: real start ele at the left hand side.
+    #       a.ex: [6,7,0,"1",2,4,5],
+    #       b. arr[mid+1:hig=size-1] still with sorted property
+    #       c. arr[mid] < arr[hig] < arr [low]
+        # if we hit in case2:
+        #   Use the serise [mid+1:hig=size-1] to loacte the target value
+        #       if target in [mid+1:hig=size-1], then recursive call the arr[low:mid-1]
+        #               else: recursive call the arr[mid+1:hig=size-1]
+
+
+##########################
+ Time complexity: O(logn)
+##########################
+    since we almost the same with binary search, time complexity is O(logn)
+
+
+
+##########################
+ Space complexity: O(1)
+##########################
+    Only some fix number of variable to temporary use.
