@@ -1,0 +1,21 @@
+#################
+Idea:
+#################
+
+    Use 2 idx pointers as indicator where to put 0 or 2 in right place.
+    Use 1 current pointer to loop all array.
+    When we put all 0 and 2 element in right place, we will have 1 elements in right place as well.
+
+
+#################
+Time complexity:
+#################
+
+    O(n), we just looping the array once.
+
+
+
+#################
+Space complexity:
+#################
+    O(1), only create some fixed variable
