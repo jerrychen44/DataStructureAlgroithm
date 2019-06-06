@@ -1,0 +1,35 @@
+########################
+ Idea:
+########################
+
+    If we have a sorted array like [1,2,3,4,5,6], we can split the array into two number
+    from the tail by index % 2 ==0 or 1
+        number1 is [1,"2",3,"4",5,"6"]  -> 642
+        number2 is ["1",2,"3",4,"5",6]  -> 531
+
+    The number1 and 2 are the max possible numbers from the original array, because the array
+    was sorted.
+    The element near to rare of array will contribute as a high digits of number 1 or number 2.
+
+
+    So, we need ....
+        1. sorted
+        2. split
+
+
+
+########################
+ Time Complexity:
+########################
+
+        1.sorted use merget sort: O(nlogn)
+        2. split O(n)
+
+        Total: still O(nlogn)
+
+
+########################
+ Space Complexity:
+########################
+
+        O(n), due to merget sort need other space to same temporarily result.
