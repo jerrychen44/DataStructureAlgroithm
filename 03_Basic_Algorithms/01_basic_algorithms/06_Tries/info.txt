@@ -1,0 +1,20 @@
+MyTrie = Trie()
+wordList = [
+    "ant", "anthology", "antagonist", "antonym",
+    "fun", "function", "factory",
+    "trie", "trigger", "trigonometry", "tripod"
+]
+for word in wordList:
+    MyTrie.insert(word)
+
+#example
+
+'''
+
+root.child= {    'a': <__main__.TrieNode at 0x7f4f1a6d4f60>,
+                 'f': <__main__.TrieNode at 0x7f4f1a71cd30>,->child ={'u': <__main__.TrieNode at 0x7f4f1a6cd198>,-->child ={'n': <__main__.TrieNode at 0x7f4f1a6cd630>}
+                 't': <__main__.TrieNode at 0x7f4f1a6db1d0>}          'a': <__main__.TrieNode at 0x7f4f1a6cd320>}-->child = {'c': <__main__.TrieNode at 0x7f4f1a6cd828>}......
+
+
+
+'''
