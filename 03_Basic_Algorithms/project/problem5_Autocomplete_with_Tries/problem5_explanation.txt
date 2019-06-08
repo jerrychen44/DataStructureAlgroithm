@@ -1,0 +1,68 @@
+#################
+# idea:
+#################
+
+    Basically the problem 5 is following the description from the jupyter notebook to
+learn Trie.
+
+
+
+#################
+# Time complexity
+#################
+class TrieNode:
+    def __init__(self):
+        O(1)
+    def insert(self, char):
+        O(1)
+
+    def suffixes(self, suffix = ''):
+    def suffixes_helper(self,suffix = '',output=[]):
+        Recursive call, it just likes the linked list.
+        Because the main traversal feature is build by hashmap, it
+        cost O(1) to lookup.
+
+
+
+class Trie:
+    def __init__(self):
+        O(1)
+
+    def insert(self, word):
+        O(n), n is the char number of the word.
+
+
+    def find(self, prefix):
+        O(m), m is the char number of the prefix
+
+
+
+#################
+# Space complexity
+#################
+
+class TrieNode:
+    def __init__(self):
+        O(1)
+    def insert(self, char):
+        O(1), just create 1 new node
+
+    def suffixes(self, suffix = ''):
+    def suffixes_helper(self,suffix = '',output=[]):
+
+        O(n), for output list, n is the number of string which with suffixes on it.
+
+
+
+
+
+
+class Trie:
+    def __init__(self):
+        O(1)
+
+    def insert(self, word):
+        O(1), no extra space needed
+
+    def find(self, prefix):
+        O(1)

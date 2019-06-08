@@ -1,0 +1,97 @@
+#################
+# idea:
+#################
+
+    Following the instruction from the problem page.
+
+#################
+# Time complexity
+#################
+
+class RouteTrie:
+    def __init__(self, ...):
+        O(1)
+
+    def insert(self, ...):
+        O(n), n is the words in the path_list. ex: n =2 if path_list = [home,about]
+
+    def find(self, ...):
+        O(m), m is the words in the target_path_list. ex: n = 3 if you want to find target_path_list=[home,school]
+
+class RouteTrieNode:
+    def __init__(self, ...):
+        O(1)
+
+    def insert(self, ...):
+
+        O(1), simply link to a new Node
+
+class Router:
+    def __init__(self, ...):
+        O(1)
+
+    def add_handler(self, ...):
+        1. get split path list by calling split_path(): O(n), as described below.
+        2. add the handler: O(m), m is the is the words in the path_list
+
+        total: O(n+m)
+
+
+    def lookup(self, ...):
+        1. get split path list by calling split_path(): O(n), as described below.
+        2. find the path_list from RouteTrie: O(m), m is the words in the target_path_list
+        total: O(n+m)
+
+
+
+
+    def split_path(self, ...):
+        O(n), n is chars in whole path string, ex: /home/about , n = 11, because
+                we use split function, I believe it travers all the chars to cut the '/' off.
+
+
+
+
+#################
+# Space complexity
+#################
+
+
+class RouteTrie:
+    def __init__(self, ...):
+        O(1)
+
+    def insert(self, ...):
+        O(n), n is the words in the path_list. ex: n =2 if path_list = [home,about]
+
+
+    def find(self, ...):
+        O(1)
+
+
+class RouteTrieNode:
+    def __init__(self, ...):
+        O(1)
+
+    def insert(self, ...):
+        O(1)
+
+
+class Router:
+    def __init__(self, ...):
+        O(1)
+
+    def add_handler(self, ...):
+        1. get split path list by calling split_path(): O(1)
+        2. add the handler: O(m), m is the is the words in the path_list
+
+        total: O(m)
+
+    def lookup(self, ...):
+        1. get split path list by calling split_path(): O(1)
+        2. find the path_list from RouteTrie: O(1)
+        total: O(1)
+
+
+    def split_path(self, ...):
+        O(1)

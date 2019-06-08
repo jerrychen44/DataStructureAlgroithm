@@ -1,0 +1,31 @@
+====== Task0 ======
+Just print the val
+    Time O(1)
+    Space O(1)
+
+====== Task1 ======
+N:all text records
+M:all call records
+
+    Time O(N+M)
+    Space O(N+M) for hashmap
+
+====== Task2 ======
+M:all call records
+
+    Time O(M)
+    Space O(M) for hashmap
+
+====== Task3 ======
+M:all call records
+
+    Time O(M)
+    Space O(M) for ans
+
+====== Task4 ======
+N:all text records
+M:all call records
+
+    Time O(2M+2N+M), 2M/2N is for call/text list which change to set(),  M is for looping checking.
+        => O(3M+2N) => O(M+N)
+    Space O(M), for ans list
