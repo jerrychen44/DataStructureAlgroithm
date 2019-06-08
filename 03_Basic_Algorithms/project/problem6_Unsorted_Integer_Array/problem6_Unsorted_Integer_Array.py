@@ -12,14 +12,43 @@ def get_min_max(ints):
     Args:
        ints(list): list of integers containing one or more integers
     """
-   print(ints)
+    if len(ints)==0:
+        return None
+
+
+    print('input:',ints)
+
+    maxval = -1
+    minval = 999999
+
+    #simgle pass
+    for item in ints:
+        #O(n)
+        if item > maxval:
+            maxval = item
+        #O(n)
+        if item < minval:
+            minval = item
+
+    print((minval,maxval))
+    return (minval,maxval)
+
+
 
 ## Example Test Case of Ten Integers
 import random
+count = 0
 
-l = [i for i in range(0, 10)]  # a list containing 0 - 9
-random.shuffle(l)
+for _ in range(300):
+    l = [i for i in range(0, 10)]  # a list containing 0 - 9
+    random.shuffle(l)
 
-print ("Pass" if ((0, 9) == get_min_max(l)) else "Fail")
+    rst = ( ((0, 9) == get_min_max(l)))
+    if rst == True:
+        print("Pass, count:",count)
+    else:
+        print("Fail, count:",count)
+        break
+    count +=1
 
 #Sorting usually requires O(n log n) time Can you come up with a O(n) algorithm (i.e., linear time)?

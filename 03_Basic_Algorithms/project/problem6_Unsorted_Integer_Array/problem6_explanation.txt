@@ -1,0 +1,25 @@
+###########
+idea
+##########
+
+
+    It just a simple find max and min value when we loop the list.
+    Do I miss understanding the problem? It seems too easy.
+
+
+
+
+###############
+Time complexity
+###############
+
+    1. O(n) for recoding max + O(n) for recording min = 2O(n) = O(n)
+    2. because we loop whole list once. (one pass)
+
+
+
+#################
+Space complexity
+#################
+
+    O(1), only some variable
