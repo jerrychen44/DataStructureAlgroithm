@@ -1,0 +1,19 @@
+DFS
+
+
+Graph searching  和 graph traversal  差不多
+差在 searching 是在你 traversal 到你要的item 後就停了
+
+因為沒有特別的root, 所以searching 可以任意挑一點開始
+
+
+idea:
+    1.挑一個node,
+    2.標示成 seen
+    3.放入stack
+    4.順著與此node 相連的邊找, 回到step1, step1~4 重複, 遇到看過的node時, 回到前一個node P(stack pop), 找此nodeP 的其他edge
+    5.重複 1~4 直到stack empty
+
+
+Time complexity: O(2*|edge| + |vertex| ), 2*|E| 因為edge 來回, 但都可以算 |E|
+            => O( |edge| + |vertex| )

@@ -1,0 +1,97 @@
+Graph 由 node (vertex) + edge 組成
+
+---02---
+tree 只是其中一個特例
+graph 沒有root,
+node, edge 都可以存data
+edge 可以存下帶表nodes 之間的關係強度
+
+兩個node 之間的關聯可以用 adjacency matrix 存下
+
+---03---
+Direction 兩個node 之間有個拜訪的方向
+單向 或雙向 或 無方向
+
+Graph 可以有 cycle
+
+
+DAG: directed acyclie graph
+
+
+
+---04---
+connectivity 性質 = Graph theory
+
+
+Disconnected graph
+=> 當中有一些node 無法與其他人相連
+    a. 可以只有一個vertex or node 與其他人不相連
+    b. 也可以是有兩個 各自相連的 connected component 但兩者無法溝通
+
+Connected graph
+=> 當中所有node 都相連
+
+
+connectivity 性質怎麼用
+ex:
+    譬如兩個圖要比較誰比較強健, 可以看看誰拿掉最少的edge 就會從connectrd -> Disconnected,
+需要越少的代表這個圖越脆弱
+
+
+
+-- 05 Graph Representation --
+
+當然你可以有 edge object 跟 node object class
+
+
+
+Edge list:
+每個小list 中寫上連接這個edge 的 node
+ex:
+edge_list = [[1,3],[2,3]], 這裡有兩個edge, 分別是 1----3------2
+
+or
+
+Adjacency list
+=> list 中的index 指的是出發點, 內容的id 是他相連的node
+
+                   index = 0     index = 1  index =2  index 3
+Adjacency_list = [    [1]      ,  [0,2,3] , [1,3]    ,  [1,2]   ]
+
+
+                    0 ----1 ---3
+                         /   /
+                        2 __/
+
+
+
+-- 06 Graph Representation: Adjacency matrix --
+**找degree 和其他edge 的關係時 非常好用
+
+index i ,j 都代表 node id, value 1 = 有連結, 0 = 沒連結
+
+
+                    0 ----1 ---3
+                         /   /
+                        2 __/
+
+    0 1 2 3
+0 [[0,1,0,0]
+1  [1,0,1,1]
+2  [0,1,0,1]
+3  [0,1,1,0]]
+
+
+基本上對角線左上到右下是 0, 因為是自己連到自己, 當出現自己有個loop 時, 才會是 1
+
+
+
+-- 07 Graph Traversal ----
+
+因為 Tree 是 Graph 的一個特例
+在graph 也會有
+DFS,和BFS traversal
+
+idea:
+    DFS: 走到path 最深
+    BFS: 垂直走完 index1 的 adjacency matrix 才往右
