@@ -1,0 +1,40 @@
+BFS
+
+idea:先走完一個node的所有 linkedNode 才往下走
+
+Iteration version
+
+step1: 任意找一個當起始點 nodeA,
+step2: nodeA 放入 queue
+step3: while len(queue) > 0:
+        q.pop(0)
+        將他的 linkedNode, 放入 queue (如果還沒visited)
+
+
+
+如果都看完這個node的 linkedNode 了, de queue 來看下一個人
+
+=> 可以把 BFS 看成一個 tree
+
+                                                level
+            G ----H                 G             1
+           /  \           =>     /  |  \
+     P----R----A               H    A   R         2
+                                        |
+                                        P         3
+
+trversal: G, H, R, A, P
+
+O(|E|+|V|)
+
+
+ps:
+BFS -> queue
+DFS -> stack
+
+
+
+
+
+
+//
