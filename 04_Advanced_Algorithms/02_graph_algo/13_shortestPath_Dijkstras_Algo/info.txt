@@ -1,0 +1,46 @@
+===================
+shortest path 慨念
+===================
+
+從nodeA -> nodeW
+最短路徑在graph 中要看是邊是怎樣的
+1.有weight, 那就是要edge加起來最小
+
+          10    900
+        (B)--(C)---(D)
+     25/             \ 8
+     (A)            (W)  --> 上面來的cost 25+10+900+9, 下面來的cost = 23+40 比較小
+        \_____(E)____/
+          23     40
+
+=> 23+40 比往上走小, A->E->W 是最短距離, 但如果你都看上面前兩步 A->B 25+10 是比較小的
+
+2.無weight, 就是單純BFS 然後看哪條路先找到nodeW, 也就是邊總和少的那條路
+=> 有最少邊到終點, 就是那條
+
+            1    1
+        (B)--(C)---(D)
+     1 /             \ 1
+     (A)            (W)   -> 上面edge 4, 下面 edge2, 下面短
+        \_____(E)____/
+          1       1
+
+
+=====================
+Dijkstra's Algorithm : 給 weight 的無向圖
+Greedy algo
+=====================
+
+1.queue:
+裡面寫上每個node 當下的 cost, 隨著時間推移, 慢慢的越多node 會被寫上cost
+2.從 queue 去extra Min cost 
+
+
+V: vertex
+
+最原始algo , 用 queue 做
+Time Complexity: O( |V|^2 ), 因為worst case 就是每個點都touch, 且當個點下又要確認queue 裡面誰最小
+
+如果用 priority queue 做的話
+可變成
+Time Complexity: O( |E| + |V|*log(|V|)  )
