@@ -1,0 +1,126 @@
+================
+01 Knapsack Problem
+================
+
+一個小偷, 他有一個背抱
+1.有一個包, 小偷能背東西的重量上限
+2.和一堆東西, 這些東西有重量和價值
+
+目標: 這個包怎麼裝可以裝走最大價值?
+    ex: 你可能從有最大value 的物品一個一個依序裝起, 但可能前兩個就超重了, 結果從小value 裝起裝到最後, 總價值還比較大
+
+
+最慘的做法
+=>暴力法, 所有可能都做, 挑value最小那組
+O(2^n), 已經是指數級的複雜度了, 不可能, n是物品數量, ex: n=5  10010 -> 1代表拿了, 所有 2x2x2x2x2 = 2^5可能
+
+ps: exponential time complexity 就是 n 已經到指數去了
+一般來說我們要的是 polynomial time 也就是多項式程度而已, nx+ny...
+
+
+
+
+=================
+02 Smarter Approach => A Faster Algorithm
+=================
+
+我們的目標是: 尋找在最大重量之下有最大的價值
+現在改成: 在最小重量之下有最大價值, 我們可以列出從0~背包重量上限 每個的重量下的最大價值
+
+**  利用 table 去存下每個kg之下預算好的max value, 所以對於這些kg, 我們只要算一次maxvalue,
+    後面就可以一直用
+
+我有三個物品 #[weight, value]
+A[2,6], B[5,9], C[4,5]
+
+假設背包最多裝 6 kg, 先 initial value 都是 0
+index         1kg   2kg     3kg     4kg     5kg     6kg
+max-value      0      0     0       0       0       0
+
+
+step1:
+    首先我們看 A, 他 2kg, 因此在表格裡 2kg 和"2kg以上" 的地方填上 6
+
+    =>代表只要背包能負重2kg以上的, 只少能裝這個value 6
+    =>因為我們也只看了第一個item, 就以現有資訊為主
+
+    index     1kg   2kg     3kg     4kg     5kg     6kg
+    value      0     6       6       6       6       6
+
+step2, 基本上重複上一步, 只是這次看 B, 5kg, 因此把表格中
+        5kg 和以上 的人改成 9
+
+    index     1kg   2kg     3kg     4kg     5kg     6kg
+    value      0     6       6       6       9       9
+
+
+step3, 再重複看 C, 4kg, 一樣我們希望改表格中  4kg 和以上的欄位
+
+        討論:
+        idea: 查表檢查新組合的value 和是否大於原本
+
+            index 4kg:  他的value 才 5, 比index 4表格中的6還少, 表示不該選C, 這格不動
+            index 5kg:  目前查表是 value9, 表示如果要選 item C, 他要能創造 > 9 才有效
+                        由於 item C 只有4kg, 因此  5-4 =1, 包還有1kg 可以使用
+                        再去查表 1kg 目前 value =0
+
+                        因此,       新組合 4kg + 1kg = 想取代的 5kg
+                        實際上的value      5   +  0  <  9
+                        所以還是輸給原本的拿法, 因此這格仍然不動
+            index 6kg:  查表檢查新組合
+                        6 - 4 =2,
+
+                        4kg + 2kg => value 5 + 6 = 11 > 原本 9 因此改掉
+
+                        index     1kg   2kg     3kg     4kg     5kg     6kg
+                        value      0     6       6       6       9       11
+
+step4, 看完了所有item 了, 我們在表格中 index 6kg 的地方找到11, 這也是我們在6kg之下能拿到最大的value了
+
+
+Run time :
+    O(nw),
+        n = number of element
+        w = weight limit, 因為每個element 都要掃過他和他以上的kg index, 確定自己能不能幫助增加
+
+    上面例子就是
+
+        n = 3, w = 1~6 = 6 = weight limit
+
+但這只算是
+    pseudo-polynomial time, 因為真的polynomial time 旁邊不會乘w, 但也一定比原本的 exponential time 好
+
+===============
+03 dynamic program
+(Lookup table to Memoization -> storing precomputed result)
+===============
+
+knapsack problem 就是一個dynamic program 的好例子
+把一個複雜的大問題: 在 weight limit 時所有的 Max value
+轉成簡單的小問題  : 在一些較小 weight時所有的 Max value
+
+特色:
+    A: Base case
+    開始的時候先解決 base case, 也就是做一個最小的計算 (compute value for one object)
+    通常base case 都是非常直觀簡單的
+
+    且利用 loopup table 去紀錄已經算過的解答
+
+    Base case: one object
+        index     1kg   2kg     3kg     4kg     5kg     6kg
+        value      0     6       6       6       6       6
+
+    B: 算法通常 = 新data + "查表"來的舊data
+
+       新value    = 此item kg的value + 查表來其他kg 所貢獻的value
+
+        ** 就是查表這個第二項, 才能讓 dynamic program 發揮功效
+
+
+=> 能在面試時看出是用dp 非常棒
+
+當你發現這個問題有可能要
+    1.找出所有可能的組合才會知道結果
+    2.能把這問題拆解成子問題嗎？ 如果可以就是dp了
+
+//
