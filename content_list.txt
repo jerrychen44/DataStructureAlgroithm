@@ -1,0 +1,228 @@
+total 97 topics
+============================================================================
+├── 02_data_structures
+│   ├── l1_array_list(16)
+│   │   ├── 04_Strings_manipulate.py
+│   │   ├── 07_implement_single_linklist_from_list.py
+│   │   ├── 08_type_of_Linked_Lists_Basics.ipynb
+│   │   ├── 08_type_of_Linked_Lists_Basics.py
+│   │   ├── 09_single_Linked_List_operation.py
+│   │   ├── 10_Reverse_Single_Linked_List.py
+│   │   ├── 11_Detecting_Loops_slow_fast_pointer.ipynb
+│   │   ├── 11_Detecting_Loops_slow_fast_pointer.py
+│   │   ├── 12_Flattening_nested_linked_list.ipynb
+│   │   ├── 13_Add-One.ipynb
+│   │   ├── 14_Duplicate-Number.ipynb
+│   │   ├── 15_Max-Sum-Subarray.ipynb
+│   │   ├── 16_Pascal's-Triangle.ipynb
+│   │   ├── 17_Even-After-Odd-Nodes.ipynb
+│   │   ├── 18_Skip-i-delete-j.ipynb
+│   │   ├── 19_Swap-Nodes.ipynb
+
+│   ├── l2_stack_queue(12)
+│   │   ├── 03_Implement_a_stack_using_an_array.ipynb
+│   │   ├── 04_Implement_a_stack_using_linked_list.ipynb
+│   │   ├── 05_python_stack_by_list_practice.ipynb
+│   │   ├── 06_Balanced_Parentheses_Exercise\ -\ Stacks.ipynb
+│   │   ├── 07_Reverse_Polish_notation.ipynb
+│   │   ├── 08_Reverse_a_stack_only_use_stack_operation.ipynb
+│   │   ├── 09_Minimum\ bracket\ reversals.ipynb
+│   │   ├── 11_Build\ a\ queue\ using\ an\ array_cycle_en_dequeue_.ipynb
+│   │   ├── 12_Build\ a\ queue\ using\ a\ linked\ list.ipynb
+│   │   ├── 13_Build\ a\ Queue\ Using\ a\ Stack.ipynb
+│   │   ├── 14_Build\ a\ Queue\ Using\ High-Level\ Python.ipynb
+│   │   ├── 15_Reverse\ a\ queue.ipynb
+
+│   ├── l3_recursion(15)
+│   │   ├── 02_recursion_introduction.ipynb
+│   │   ├── 03_Factorial\ using\ recursion.ipynb
+│   │   ├── 04_Reversing\ a\ string.ipynb
+│   │   ├── 05_Checking\ Palindrome.ipynb
+│   │   ├── 06_list_Permutation.ipynb
+│   │   ├── 07_String-Permutations.ipynb
+│   │   ├── 08_Keypad\ Combinations.ipynb
+│   │   ├── 09_Deep_Reverse.ipynb
+│   │   ├── 10_intro_Call\ stack.ipynb
+│   │   ├── 11_Recurrence\ Relations.ipynb
+│   │   ├── 12_Tower-of-Hanoi.ipynb
+│   │   ├── 13_Return-Codes.ipynb
+│   │   ├── 14_Return-Subsets.ipynb
+│   │   ├── 15_Staircase.ipynb
+│   │   └── 16_Last-index-recursion.ipynb
+
+│   ├── l4_tree(6)
+│   │   ├── 12_BT_Create_a_binary_tree.ipynb
+│   │   ├── 13_DFS_traverse_a_tree_dfs_in_stack_pre_in_post_order_in_recursion.ipynb
+│   │   ├── 14_BFS_traverse_a_tree_bfs.ipynb
+│   │   ├── 15_BST_binary_search_tree.ipynb
+│   │   ├── 16_Diameter\ of\ a\ Binary\ Tree.ipynb
+│   │   ├── 17_Path-from-root-to-node.ipynb
+│   │   └── note.txt
+
+│   ├── l5_maps_hashing(6)
+│   │   ├── 01_Introduction\ to\ Maps.ipynb
+│   │   ├── 08_HashMap_hashencode_get_put_delete_rehashing.ipynb
+│   │   ├── 10_use_hashmap_caching_StairCase_problem.ipynb
+│   │   ├── 11_simple_String\ Key\ Hash\ Table.ipynb
+│   │   ├── 12_two_sum_Pair-Sum-to-target.ipynb
+│   │   ├── 13_Longest-Consecutive-Subsequence_leetcode_hard.ipynb
+│   │   └── note.txt
+
+│   ├── project(6)
+│   │   ├── info.txt
+│   │   ├── problem_1
+│   │   │   ├── explanation_1.txt
+│   │   │   └── problem1_LRU_Cache.py
+│   │   ├── problem_2
+│   │   │   ├── explanation_2.txt
+│   │   │   ├── problem_2_file_recursion.py
+│   │   ├── problem_3
+│   │   │   ├── explanatioin_3.txt
+│   │   │   └── problem_3_Huffman_Coding.py
+│   │   ├── problem_4
+│   │   │   ├── explanation_4.txt
+│   │   │   └── problem4_Active_Directory.py
+│   │   ├── problem_5
+│   │   │   ├── explanation5.txt
+│   │   │   ├── problem5_blockchain.py
+│   │   │   └── untitled-diagram.png
+│   │   └── problem_6
+│   │       ├── explanation6.txt
+│   │       └── problem6_Union_and_Intersection_of_Two_Linked_Lists.py
+
+============================================================================
+├── 03_Basic_Algorithms
+│   ├── 01_basic_algorithms
+│   │   ├── 01_05_binary_serach(5)
+│   │   │   ├── 01_binary_search_info.txt
+│   │   │   ├── 02_Efficiency_Binary_Search.txt
+│   │   │   ├── 03_Binary_search_practice_implement_iteration_recursive.ipynb
+│   │   │   ├── 04_binary_search_variations_1_findfirst_2_contains.ipynb
+│   │   │   └── 05_First\ and\ last\ index_O(logn).ipynb
+│   │   ├── 06_Tries(1)
+│   │   │   ├── 06_trie_introduction.ipynb
+│   │   │   └── info.txt
+│   │   ├── 07_10_Heaps(1)
+│   │   │   ├── 10_heap_intro_insert_delet_implement.ipynb
+│   │   │   ├── info.txt
+│   │   └── 11_15_self_balance_tree_Red-Black-Tree(1)
+│   │       ├── 14_RedBlackTreeWalkthrough.ipynb
+│   │       ├── Red-black_tree.png
+│   │       └── info.txt
+
+│   ├── 02_sorting_algorithms
+│   │   ├── 01_04_bubble_sort(1)
+│   │   │   ├── 04_bubble_sort_exercises.ipynb
+│   │   │   └── info.txt
+│   │   ├── 05_09_merge_sort(2)
+│   │   │   ├── 07_merge_sort_walkthrough.ipynb
+│   │   │   ├── 08_Counting\ Inversions.ipynb
+│   │   │   ├── 09_Case\ Specific\ Sorting\ of\ Strings.ipynb
+│   │   │   └── info.txt
+│   │   ├── 10_12_quick_sort(1)
+│   │   │   ├── 12_QuickSortWalkthough.ipynb
+│   │   │   └── info.txt
+│   │   ├── 13_heap_sort(1)
+│   │   │   ├── HeapSort.ipynb
+│   │   │   ├── Heapsort-example.gif
+│   │   │   └── info.txt
+│   │   ├── 14_Pair\ Sum\ Problem.ipynb(1)
+│   │   └── 15_Sort-0-1-2.ipynb(1)
+
+│   ├── 03_faster_divide_conquer_algorithms(1)
+│   │   └── 01_08_info.txt
+
+│   ├── project(7)
+│   │   ├── problem1_square_root_of_an_integer
+│   │   │   ├── 01_explanation.txt
+│   │   │   └── 01_square_root_of_integer.py
+│   │   ├── problem2_search_in_Rotated_sorted_array
+│   │   │   ├── problem2_explanation.txt
+│   │   │   └── problem2_search_in_Rotated_sorted_array.py
+│   │   ├── problem3_rearrange_array_elements
+│   │   │   ├── Rearrange_Array_Elements.py
+│   │   │   └── problem3_explanation.txt
+│   │   ├── problem4_Dutch_National_Flag
+│   │   │   ├── problem4_dutch_national_flag.py
+│   │   │   └── problem4_explanation.txt
+│   │   ├── problem5_Autocomplete_with_Tries
+│   │   │   ├── Trie.ipynb
+│   │   │   └── problem5_explanation.txt
+│   │   ├── problem6_Unsorted_Integer_Array
+│   │   │   ├── problem6_Unsorted_Integer_Array.py
+│   │   │   └── problem6_explanation.txt
+│   │   └── problem7_Request_Routing_in_a_Web_Server_with_a_Trie
+│   │       ├── problem7_Request_Routing_in_a_Web_Server_with_a_Trie.py
+│   │       └── problem7_explanation.txt
+
+
+============================================================================
+├── 04_Advanced_Algorithms
+│   ├── 01_Greedy_Algorithm(3)
+│   │   ├── 01_greedy_introduction.ipynb
+│   │   ├── 02_min_platforms.ipynb
+│   │   ├── 03_Min_Operations.ipynb
+
+│   ├── 02_graph_algo(2)
+│   │   ├── 01_07_graph_basic
+│   │   │   └── info.txt
+│   │   ├── 08_10_DFS
+│   │   │   ├── 08_info.txt
+│   │   │   ├── 09_graph_dfs_stack_iteration.ipynb
+│   │   │   ├── 10_graph_DFS_recursion.ipynb
+│   │   ├── 11_12_BFS(1)
+│   │   │   ├── 11_info.txt
+│   │   │   └── 12_graph_bfs_iteration.ipynb
+│   │   ├── 13_shortestPath_Dijkstras_Algo
+│   │   │   └── info.txt
+│   │   ├── 14_Dijkstras_algo(1)
+│   │   │   └── 14_Diijkstra_Algorithm.ipynb
+│   │   └── 15_Min_Connecting_Islands_Cost.ipynb
+
+│   ├── 03_dynamic_programmin
+│   │   ├── 01_04_Knapsack_Problem(1)
+│   │   │   ├── 01_info.txt
+│   │   │   └── 04_knapsack_problem.ipynb
+│   │   ├── 05_Longest_Common_subsequence(1)
+│   │   │   ├── 05_longest_common_subsequence.ipynb
+│   │   ├── 06_Longest_Palindromic_Subsequence(1)
+│   │   │   └── 06_Longest\ Palindromic\ Sequence.ipynb
+│   │   ├── 07_Coin_Change.ipynb(1)
+│   │   └── 08_Stock_Prices.ipynb(1)
+
+│   └── project_Astar(1)
+│       ├── Astar_info
+│       │   ├── astar.png
+│       │   ├── astar2.png
+│       │   └── astar3.png
+│       ├── code
+│       │   ├── __pycache__
+│       │   │   ├── helpers.cpython-37.pyc
+│       │   │   └── my_helper.cpython-37.pyc
+│       │   ├── a_star.py
+│       │   ├── cmd.txt
+│       │   ├── code_bkup
+│       │   │   ├── 00_a_star_old_ver.py
+│       │   │   └── 01_a_star_all_value_reference_from_dict.py
+│       │   ├── helpers.py
+│       │   ├── helpers.pyc
+│       │   ├── map-10.pickle
+│       │   ├── map-40.pickle
+│       │   └── my_helper.py
+│       └── submit_server_code
+│           ├── __pycache__
+│           │   ├── helpers.cpython-37.pyc
+│           │   ├── student_code.cpython-37.pyc
+│           │   └── test.cpython-37.pyc
+│           ├── helpers.py
+│           ├── map-10.pickle
+│           ├── map-10.png
+│           ├── map-40.pickle
+│           ├── map-40.png
+│           ├── map40_8_35.png
+│           ├── map40_path_5_34.png
+│           ├── map40_path_8_24.png
+│           ├── project_notebook.ipynb
+│           ├── student_code.py
+│           └── test.py
+
